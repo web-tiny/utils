@@ -286,3 +286,42 @@ console.log(validateEmail('234@foxmail.com'))
 
 // 检查是否为数字
 const validateNumber = n => !isNaN(parseFloat(n)) && isFinite(n) && Number(n) == n
+
+/**
+ * 将日期转为自己想要的格式（如果第二个参数不传，默认是：yy-mm-dd hh:mm:ss），如果不是内部的格式，则返回一个年月日时分秒的对象，自己组装成想要的格式
+ * @param {*} t（date或者时间戳）
+ * @param {*} format （自己想要的格式）
+ */
+const formatDate = (t, format = "yy-mm-dd hh:mm:ss") => {
+  const time = new Date(t)
+  const paddingZero = data => (data < 10 ? "0" + data : data)
+
+  const y = time.getFullYear()
+  const m = time.getMonth() + 1
+  const d = paddingZero(time.getDate())
+  const h = paddingZero(time.getHours())
+  const mi = paddingZero(time.getMinutes())
+  const s = paddingZero(time.getSeconds())
+
+  let outputTime = null
+  if (format === "yy-mm-dd") {
+    outputTime = y + "-" + m + "-" + d
+  } else if (format === "yy-mm-dd hh:mm:ss") {
+    outputTime = y + "-" + m + "-" + d + " " + h + ":" + mi + ":" + s
+  } else if (format === "yy/mm/dd") {
+    outputTime = y + "/" + m + "/" + d
+  } else if (format === "yy/mm/dd hh:mm:ss") {
+    outputTime = y + "/" + m + "/" + d + " " + h + ":" + mi + ":" + s
+  } else if (format === "hh:mm:ss") {
+    outputTime = h + ":" + mi + ":" + s
+  } else {
+    outputTime = { years: y, mouths: m, days: d, hours: h, minutes: mi, seconds: s }
+  }
+  return outputTime
+}
+
+console.log(formatDate(new Date(), 'yy-mm-dd'))
+console.log(formatDate(new Date().valueOf(), 'yy/mm/dd'))
+console.log(formatDate(new Date().valueOf(), 'yy-mm-dd hh:mm:ss'))
+console.log(formatDate(new Date().valueOf(), 'yy/mm/dd hh:mm:ss'))
+console.log(formatDate(new Date().valueOf(),'hh:mm:ss'))
