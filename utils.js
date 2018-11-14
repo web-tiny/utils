@@ -3,64 +3,48 @@
  * @param {*} arr 
  * @param {*} value 
  */
-// 计算值的次数
+// 计算数组中一个值出现的次数
 const countOccurrences = (arr, value) => arr.reduce((a, v) => v === value? a + 1: a + 0, 0)
-console.log(countOccurrences([1, 1, 1, 2, 2, 3, 9], 3))  // 1
 
-// 深拼合数组
+// 将一个任何维的数组深拼合成一维数组
 const deepFlatten = arr => [].concat(...arr.map(v => Array.isArray(v) ? deepFlatten(v): v))
-console.log(deepFlatten([1, [2], [[3, [4, 5, [6], 10], 9], 8], 7])) // [ 1, 2, 3, 4, 5, 6, 10, 9, 8, 7 ]
 
-// 移除falesy值
+// 移除falesy值，返回一个没有falesy值的数组
 const compact = arr => arr.filter(Boolean)
-console.log(compact([0, 1, "", false, NaN, undefined, 2, 3, 's'])) // [ 1, 2, 3, 's' ]
 
 // 将数组块划分为指定大小的较小数组
 const chunk = (arr, size) => Array.from({length: Math.ceil(arr.length / size)}, (v, i) => arr.slice(i * size, i * size + size))
-console.log(chunk([1, 2, 3, 4, 5], 3)) // [ [ 1, 2, 3 ], [ 4, 5 ] ]
 
-// 两个数组的差值
+// 两个数组的差值，a数组中没有在b数组中的值组成的数组
 const defference = (a, b) => { const s = new Set(b); return a.filter(x => !s.has(x)) }
-console.log(defference([1, 2, 3], [1, 2, 4])) // [3]
 
-// 两个数组的补集
+// 两个数组的补集（a不在b中，b不在a中的组成的数组）
 const symmetricDifference = (a, b) => {
   const sA = new Set(a)
   const sB = new Set(b)
   return [...a.filter(x => !sB.has(x)), ...b.filter(x => !sA.has(x))];
 }
-console.log(symmetricDifference([2, 3, 4, 5, 6, 7], [4, 5, 20, 30, 50, 60])) // [ 2, 3, 6, 7, 20, 30, 50, 60 ]
 
 // 两个数组的交集
 const intersection = (a, b) => { const s = new Set(b); return a.filter(x => s.has(x)) }
-console.log(intersection([1, 2, 3], [4, 3, 2])) // [ 2, 3 ]
 const similarity = (arr, values) => arr.filter(v => values.includes(v))
-console.log(similarity([1, 2, 3], [4, 3, 2])) // [ 2, 3 ]
 
 // 去重
 const uniqueValue = arr => [...new Set(arr)]
-console.log(uniqueValue([1, 1, 2, 2, 3, 3, 4, 5])) //[ 1, 2, 3, 4, 5 ]
 
-// 取第n倍个元素
+// 取第n倍个元素（按下标）
 const everyNth = (arr, nth) => arr.filter((e, i) => i % nth === 0)
-console.log(everyNth([1, 2, 3, 4, 5, 6], 3)) //[ 1, 4 ]
 
 // 初始化数组的指定长度的值
 const initializeArrayWithValues = ( n, value = 0 ) => Array(n).fill(value)
-console.log(initializeArrayWithValues(5, 2)) //[ 2, 2, 2, 2, 2 ]
 
 // 返回数组的第n个元素
 const nthElement = (arr, n = 0) => (n > 0 ? arr.slice(n, n+1) : arr.slice(n))[0]
-console.log(nthElement(['A', 'b', 'c'], 2)) // c
-console.log(nthElement(['A', 'b', 'c'], -2)) // b
-console.log(nthElement(['A', 'b', 'c'], 3)) // undefined
-console.log(nthElement(['A', 'b', 'c'])) // A
 
 // 从对象中选取对应于给定键的键值对
 const pick = (obj, arr) => arr.reduce((acc, curr) => (curr in obj && (acc[curr] = obj[curr]), acc), {})
-console.log(pick({ a: 1, b: "2", c: 3 }, ["a", "c"])) // { a: 1, c: 3 }
 
-// 拉去数组中不包括指定值的数组
+// 删除数组中的指定值，返回除去删除的值的新数组
 const pull = (arr, ...args) => {
   let pulled = arr.filter((v, i) => !args.includes(v))
   arr.length = 0
@@ -68,24 +52,15 @@ const pull = (arr, ...args) => {
     arr.push(v)
   })
 }
-let myarray = ["a", "b", "c", "a", "b", "c"]
-pull(myarray, 'a', 'c')
-console.log(myarray) // [ 'b', 'b' ]
-let myarray2 = [5, 6, 7, 10, 20, 60]
-pull(myarray2, 10, 20)
-console.log(myarray2) // [ 5, 6, 7, 60 ]
 
-// 从数组中移除给定方法返回false的元素
+// 从数组中移除给定方法返回false的元素，返回删除的数 组成的数组
 const remove = (arr, func) => Array.isArray(arr) ? arr.filter(func).reduce((acc, val) => {
   arr.splice(arr.indexOf, 1)
   return acc.concat(val)
 }, []) : []
-console.log(remove([1, 2, 3, 4], n => n % 2 === 0)) // [ 2, 4 ]
 
 // 返回数组中(也可以是字符串)的随机元素
 const sample = arr => arr[Math.floor(Math.random() * arr.length)]
-console.log(sample([7, 9, 11]))
-console.log(sample('jiaorengui'))
 
 // 返回数组中除了第一个元素的所有元素
 const tail = arr => arr.length > 1 ? arr.slice(1) : arr
@@ -93,13 +68,10 @@ const take = (arr, n = 1) => arr.slice(0, n)
 
 // 合并两个数组并去重
 const union = (a, b) => Array.from(new Set([...a, ...b]))
-console.log(union([1, 2, 3], [4, 3, 2])) // [ 1, 2, 3, 4 ]
 
 
-// 获取url参数转为一个对象
+// 获取url参数并返回一个由key和valu组成的对象
 const getUrlParameters = url => url.match(/([^?=&]+)(=([^&]*))/g).reduce((a,v) =>(a[v.slice(0, v.indexOf('='))] = v.slice(v.indexOf('=')+1), a),{})
-console.log(getUrlParameters("http://url.com/page?age=18&name=jiao&education=1"))
-console.log("http://url.com/page?age=18&name=jiao&education=1".match(/([^?=&]+)(=([^&]*))/g))
 
 // 重定向到指定的url
 const redirect = (url, asLink = true) => asLink ? window.location.href = url : window.location.replace(url)
@@ -129,19 +101,15 @@ sleepWork()
 
 // 返回一个数字数组的平均值
 const arrayAverage = arr => arr.reduce((acc, val) => acc + val, 0) / arr.length
-console.log(arrayAverage([1,2,3,4,5])) // 3
 
 // 返回一个数字数组的和
 const arraySum = arr => arr.reduce((acc, curr) => acc + curr, 0)
-console.log(arraySum([1, 2, 3, 4, 5])) // 15
 
 // 将数字转换为数字数组
 const digitize = n => [...n].map(i => parseInt(i))
-console.log(digitize('343453')) // [ 3, 4, 3, 4, 5, 3 ]
 
 // 计算一个数的阶乘
 const factorial = n => n < 0 ?(() => { throw new TypeError('Negative numbers are not allowed')}) : n <= 1 ? 1: n * factorial( n-1 )
-console.log(factorial(6)) // 720
 
 // 生成一个斐波那契数列数组
 const fibonacci = n => Array(n).fill(0).reduce((acc, curr, i) => acc.concat(i > 1 ? acc[i - 1] + acc[i - 2]: i), [])
@@ -152,15 +120,12 @@ const isEven = n => n % 2 === 0
 
 // 返回指定范围内的随机整数
 const randomIntegerInRange = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
-console.log(randomIntegerInRange(1, 3))
 
 // 返回指定范围内的随机数
 const randomNumberInRange = (min, max) => Math.random() * (max - min + 1) + min
-console.log(randomNumberInRange(1, 3))
 
 // 将数字四舍五入到指定的位数
 const round = (n, decimals = 0) => Number(`${Math.round(`${n}e${decimals}`)}e-${decimals}`)
-console.log(round(5.00857))
 
 /**
  * Object
@@ -190,13 +155,11 @@ const testObj = {
 cleanObj(testObj, ['a'], 'children')
 console.log(testObj) // { a: 1, children: { a: 1, children: { a: 1 } } }
 
-// 从给定的键值对创建对象
+// 从给定的键值对数组创建对象
 const objectFromPairs = arr => arr.reduce((a, v) => (a[v[0]] = v[1], a), {})
-console.log(objectFromPairs([['a', 1], ['b', 2]])) // { a: 1, b: 2 }
 
 // 从对象创建键值对数组的数组
 const objectToPairs = obj => Object.keys(obj).map( k => [k, obj[k]])
-console.log(objectToPairs({ a: 1, b: 2 })) // [ [ 'a', 1 ], [ 'b', 2 ] ]
 
 /**
  * String
@@ -208,32 +171,25 @@ const anagrams = str => {
   }
   return str.split('').reduce((acc, letter, i) => acc.concat(anagrams(str.slice(0, i) + str.slice(i + 1)).map(val => letter + val)), [])
 }
-console.log(anagrams('abc')) // [ 'abc', 'acb', 'bac', 'bca', 'cab', 'cba' ]
 
 // 将字符串中每个单词的首字母大写
 const capitalizeEveryWord = str => str.replace(/\b[a-z]/g, char => char.toUpperCase())
-console.log(capitalizeEveryWord('hello jiao rengui')) // Hello Jiao Rengui
 
-// 从匹配转换字符串
+// 从匹配转换字符串：someLabelThatNeedsToBeCamelized -> some-label-that-needs-to-be-camelized
 const fromCamelCase = (str, separator = "_") =>
   str.replace(/([a-z\d])([A-Z])/g, "$1" + separator + "$2").replace(/([A-Z]+)([A-Z][a-z\d]+)/g, "$1" + separator + "$2").toLowerCase()
-console.log(fromCamelCase('someLabelThatNeedsToBeCamelized', '-')) // some-label-that-needs-to-be-camelized
 
-// 将字符串转换为匹配
+// 将字符串转换为匹配:some_database_field_name->someDatabaseFieldName
 const toCamelCase = str => str.replace(/^([A-Z])|[\s-_]+(\w)/g, (match, p1, p2, offset) => p2 ? p2.toUpperCase() : p1.toLowerCase())
-console.log(toCamelCase('some_database_field_name')) //someDatabaseFieldName
 
 // 字符串反转
 const reverseString = str => [...str].reverse().join('')
-console.log(reverseString('jiaorengui')) // iugneroaij
 
 // 按字母顺序对字符串中的字符进行排序
 const sortCharactersInString = str => str.split('').sort((a, b) => a.localeCompare(b)).join('')
-console.log(sortCharactersInString('jiaorengui')) //aegiijnoru
 
 // 将字符串截断为指定长度
 const truncateString = (str, num) => str.length > num ? str.slice(0, num > 3 ? num -3 : num) + '...' : str
-console.log(truncateString('jiao Rengui',10))
 
 /**
  * usefal
@@ -241,11 +197,9 @@ console.log(truncateString('jiao Rengui',10))
  */
 // 返回第一个非undefined/null/''/NaN参数
 const coalesce = (...args) => args.find(_ => ![undefined, null, '', NaN].includes(_))
-console.log(coalesce(null, undefined, "", NaN, "Waldo"))
 
 // 返回值的类型
 const getType = v => v === undefined ? 'undefined' : v === null ? 'null' : v.constructor.name.toLowerCase()
-console.log(getType(''))
 
 // 将以#开头的颜色值转化为rgb值
 const hexToRgb = hex => {
@@ -253,11 +207,9 @@ const hexToRgb = hex => {
   const extendedHex = hex.slice(hex.startsWith('#') ? 1 : 0).length === 3 ? extendHex(hex) : hex
   return `rgb(${parseInt(extendedHex.slice(1), 16) >> 16}, ${(parseInt(extendedHex.slice(1), 16) & 0x00ff00) >> 8}, ${parseInt(extendedHex.slice(1), 16) & 0x0000ff})`
 }
-console.log(hexToRgb('#27ae60'))
 
 // 将 RGB 组件的值转换为 colorcode
 const RGBToHex = (r, g, b) => '#' + ((r << 16) + (g << 8) + b).toString(16).padStart(6, "0")
-console.log(RGBToHex(255, 255, 255))
 
 const isArray = val => !!val && Array.isArray(val)
 
@@ -271,6 +223,12 @@ const isString = val => typeof val === 'string'
 
 const isSymbol = val => typeof val === 'symbol'
 
+// 判断正整数
+const isPositiveInteger = data => /^[0-9]*[1-9][0-9]*$/.test(data)
+
+// 验证是否中文
+const isChineseName = name => /^[\u4E00-\u9FA5]{1,30}$/.test(name)
+
 // 测量执行函数所用的时间
 const timeTaken = callback => {
   console.time('timeTaken')
@@ -282,10 +240,12 @@ console.log(timeTaken(() => Math.pow(2,100)))
 
 // 检查是否是有效的email
 const validateEmail = str => /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(str)
-console.log(validateEmail('234@foxmail.com'))
 
 // 检查是否为数字
 const validateNumber = n => !isNaN(parseFloat(n)) && isFinite(n) && Number(n) == n
+
+// 验证是否是有效的手机号
+const validatePhone = phone => /^1[34578]\d{9}$/.test(phone)
 
 /**
  * 将日期转为自己想要的格式（如果第二个参数不传，默认是：yy-mm-dd hh:mm:ss），如果不是内部的格式，则返回一个年月日时分秒的对象，自己组装成想要的格式
@@ -320,8 +280,184 @@ const formatDate = (t, format = "yy-mm-dd hh:mm:ss") => {
   return outputTime
 }
 
-console.log(formatDate(new Date(), 'yy-mm-dd'))
-console.log(formatDate(new Date().valueOf(), 'yy/mm/dd'))
-console.log(formatDate(new Date().valueOf(), 'yy-mm-dd hh:mm:ss'))
-console.log(formatDate(new Date().valueOf(), 'yy/mm/dd hh:mm:ss'))
-console.log(formatDate(new Date().valueOf(),'hh:mm:ss'))
+/**
+ * 基于当前时间的多少天前或者多少天后
+ * @param {*} format 前/后
+ * @param {*} date 多少天
+ * @param {*} showFormat 格式
+ */
+const getSomeDay = (format, date, showFormat) => {
+  if ((format !== '+') && (format !== '-')) {
+    console.warn('第一个参数只能是"+"或者"-"字符')
+    return ''
+  }
+  if (!isPositiveInteger(date)) {
+    console.warn("第二个参数只能是正整数");
+    return "";
+  }
+  let basicTimeStamp = new Date().valueOf()
+  let time
+  format === '+' && (time = basicTimeStamp + (3600 * 1000 * 24 * date))
+  format === '-' && (time = basicTimeStamp - (3600 * 1000 * 24 * date))
+
+  return formatDate(time, showFormat)
+}
+
+// 身份证校验码校验
+const _checkCode = (val) => {
+  const p = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
+  const factor = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2]
+  const parity = [1, 0, 'X', 9, 8, 7, 6, 5, 4, 3, 2]
+  let code = val.substring(17)
+  if (p.test(val)) {
+    let sum = 0
+    for (let i = 0; i < 17; i++) {
+      sum += val[i] * factor[i]
+    }
+    if (parity[sum % 11] == code.toUpperCase()) {
+      return true
+    }
+  }
+  return false
+}
+
+// 身份证出生日期校验
+const _checkDate = val => {
+  const pattern = /^(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)$/
+  if (pattern.test(val)) {
+    const year = val.substring(0, 4)
+    const month = val.substring(4, 6)
+    const date = val.substring(6, 8)
+    const date2 = new Date(year + "-" + month + "-" + date)
+    if (date2 && date2.getMonth() == (parseInt(month) - 1)) {
+      return true
+    }
+  }
+  return false
+}
+
+// 身份证省级地址码校验
+const _checkProv = val => {
+  var pattern = /^[1-9][0-9]/
+  var provs = {
+    11: "北京",
+    12: "天津",
+    13: "河北",
+    14: "山西",
+    15: "内蒙古",
+    21: "辽宁",
+    22: "吉林",
+    23: "黑龙江 ",
+    31: "上海",
+    32: "江苏",
+    33: "浙江",
+    34: "安徽",
+    35: "福建",
+    36: "江西",
+    37: "山东",
+    41: "河南",
+    42: "湖北 ",
+    43: "湖南",
+    44: "广东",
+    45: "广西",
+    46: "海南",
+    50: "重庆",
+    51: "四川",
+    52: "贵州",
+    53: "云南",
+    54: "西藏 ",
+    61: "陕西",
+    62: "甘肃",
+    63: "青海",
+    64: "宁夏",
+    65: "新疆",
+    71: "台湾",
+    81: "香港",
+    82: "澳门"
+  }
+  if (pattern.test(val)) {
+    if (provs[val]) {
+      return true
+    }
+  }
+  return false
+}
+
+/**
+ * 身份证号校验 val为String类型
+ * @param {*} val 
+ */
+const validateCardID = val => {
+  if (_checkCode(val)) {
+    const date = val.substring(6, 14)
+    if (_checkDate(date)) {
+      if (_checkProv(val.substring(0, 2))) {
+        return true
+      }
+    }
+  }
+  return false
+}
+
+export default {
+  validateCardID,
+  getSomeDay,
+  formatDate,
+  validatePhone,
+  validateNumber,
+  validateEmail,
+  timeTaken,
+  isChineseName,
+  isPositiveInteger,
+  isSymbol,
+  isString,
+  isNumber,
+  isFunction,
+  isBoolean,
+  isArray,
+  RGBToHex,
+  hexToRgb,
+  getType,
+  coalesce,
+  truncateString,
+  sortCharactersInString,
+  reverseString,
+  toCamelCase,
+  fromCamelCase,
+  capitalizeEveryWord,
+  anagrams,
+  objectToPairs,
+  objectFromPairs,
+  cleanObj,
+  round,
+  randomNumberInRange,
+  randomIntegerInRange,
+  isEven,
+  fibonacci,
+  factorial,
+  digitize,
+  arraySum,
+  arrayAverage,
+  sleep,
+  promisify,
+  scrollToTop,
+  redirect,
+  getUrlParameters,
+  union,
+  take,
+  sample,
+  remove,
+  pull,
+  pick,
+  nthElement,
+  initializeArrayWithValues,
+  everyNth,
+  uniqueValue,
+  similarity,
+  symmetricDifference,
+  defference,
+  chunk,
+  compact,
+  deepFlatten,
+  countOccurrences
+}
