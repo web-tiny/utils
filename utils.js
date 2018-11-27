@@ -217,7 +217,7 @@ const isBoolean = val => typeof val === 'boolean'
 
 const isFunction = val => val && typeof val === 'function'
 
-const isNumber = val => typeof val === 'number'
+const isNumber = val => /^[0-9]+.?[0-9]*$/.test(val)
 
 const isString = val => typeof val === 'string'
 
@@ -245,7 +245,7 @@ const validateEmail = str => /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+
 const validateNumber = n => !isNaN(parseFloat(n)) && isFinite(n) && Number(n) == n
 
 // 验证是否是有效的手机号
-const validatePhone = phone => /^1[34578]\d{9}$/.test(phone)
+const validatePhone = phone => /^1[345789]\d{9}$/.test(phone)
 
 /**
  * 将日期转为自己想要的格式（如果第二个参数不传，默认是：yy-mm-dd hh:mm:ss），如果不是内部的格式，则返回一个年月日时分秒的对象，自己组装成想要的格式
