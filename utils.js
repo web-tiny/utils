@@ -399,6 +399,22 @@ const validateCardID = val => {
   return false
 }
 
+/**
+ * 过滤对象中为false的键
+ * @param {} params 
+ */
+const filterObjectNullKey = params => {
+  let { entries } = Object
+  params = Object.assign({}, params)
+  let obj = {}
+  for (let [key, value] of entries(params)) {
+    if (value) {
+      obj[key] = value
+    }
+  }
+  return obj
+}
+
 export default {
   validateCardID,
   getSomeDay,
@@ -459,5 +475,6 @@ export default {
   chunk,
   compact,
   deepFlatten,
-  countOccurrences
+  countOccurrences,
+  filterObjectNullKey
 }
