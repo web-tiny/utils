@@ -191,6 +191,12 @@ const sortCharactersInString = str => str.split('').sort((a, b) => a.localeCompa
 // 将字符串截断为指定长度
 const truncateString = (str, num) => str.length > num ? str.slice(0, num > 3 ? num -3 : num) + '...' : str
 
+// 去掉字符串的首尾空格
+const trim = str => str.replace(/(^\s*)|(\s*$)/g, '')
+
+// 去掉字符串的所有空格
+const trimAll = str => str.replace(/\s/g,'')
+
 /**
  * usefal
  * @param  {...any} args 
