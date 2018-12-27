@@ -2,7 +2,7 @@
  * @Author: jrg 
  * @Date: 2018-12-27 14:11:49 
  * @Last Modified by: jrg
- * @Last Modified time: 2018-12-27 15:20:52
+ * @Last Modified time: 2018-12-27 18:00:14
  */
 
 /**
@@ -242,6 +242,8 @@ const isString = val => typeof val === 'string'
 
 const isSymbol = val => typeof val === 'symbol'
 
+const isObject = val => Object.prototype.toString.call(val) === '[Object Object]'
+
 // 判断正整数
 const isPositiveInteger = data => /^[0-9]*[1-9][0-9]*$/.test(data)
 
@@ -257,6 +259,21 @@ const validateNumber = n => !isNaN(parseFloat(n)) && isFinite(n) && Number(n) ==
 
 // 验证是否是有效的手机号
 const validatePhone = phone => /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/.test(phone)
+
+// 验证有效的密码：至少1个大写字母，1个小写字母和1个数字，长度为6-16
+const validPassword = val => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d){6,16}/.test(val)
+
+//验证用户名，4到16位（字母，数字，下划线，减号）
+const validUserName = val => /^[a-zA-Z0-9_-]{4,16}/.test(val)
+
+// 验证url
+const validURL = val => /^((https?|ftp|file):\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(val)
+
+// 验证车牌号
+const validCarNum = val => /^([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}(([0-9]{5}[DF])|([DF]([A-HJ-NP-Z0-9])[0-9]{4})))|([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳]{1})$/.test(val)
+
+// 验证银行卡号13-19位，第一位不为0
+const validBankNum = val => /^([1,9]{1})(\d{12,18})/.test(val)
 
 // 测量执行函数所用的时间
 const timeTaken = callback => {
@@ -324,7 +341,7 @@ const getSomeDay = (format, date, showFormat) => {
 }
 
 // 身份证校验码校验
-const _checkCode = (val) => {
+const checkCode = (val) => {
   const p = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
   const factor = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2]
   const parity = [1, 0, 'X', 9, 8, 7, 6, 5, 4, 3, 2]
@@ -342,7 +359,7 @@ const _checkCode = (val) => {
 }
 
 // 身份证出生日期校验
-const _checkDate = val => {
+const checkDate = val => {
   const pattern = /^(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)$/
   if (pattern.test(val)) {
     const year = val.substring(0, 4)
@@ -357,7 +374,7 @@ const _checkDate = val => {
 }
 
 // 身份证省级地址码校验
-const _checkProv = val => {
+const checkProv = val => {
   var pattern = /^[1-9][0-9]/
   var provs = {
     11: '北京',
@@ -408,10 +425,10 @@ const _checkProv = val => {
  * @param {*} val 
  */
 const validateCardID = val => {
-  if (_checkCode(val)) {
+  if (checkCode(val)) {
     const date = val.substring(6, 14)
-    if (_checkDate(date)) {
-      if (_checkProv(val.substring(0, 2))) {
+    if (checkDate(date)) {
+      if (checkProv(val.substring(0, 2))) {
         return true
       }
     }
@@ -421,18 +438,29 @@ const validateCardID = val => {
 
 /**
  * 过滤对象中为false的键
- * @param {} params 
+ * @param {*} obj 
  */
-const filterObjectNullKey = params => {
-  let { entries } = Object
-  params = Object.assign({}, params)
-  let obj = {}
-  for (let [key, value] of entries(params)) {
-    if (value) {
-      obj[key] = value
+const filterObjectNullKey = obj => {
+  if (isObject(obj)) {
+    for (const key in obj) {
+      !obj[key] && delete obj[key]
     }
+    return obj
+  } else {
+    console.warn('入参必须为对象', obj)
   }
-  return obj
+}
+
+/**
+ * 节流函数，防止onresize,mousemove,onscroll等事件造成的卡顿
+ * @param {需要节流的方法} fn 
+ * @param {延迟时间，单位是毫秒} time 
+ */
+const throttle = (fn, time) => {
+  clearTimeout(fn.tId)
+  fn.tId = setTimeout(() => {
+    fn.call(this)
+  }, time)
 }
 
 export default {
@@ -451,6 +479,7 @@ export default {
   isFunction,
   isBoolean,
   isArray,
+  isObject,
   RGBToHex,
   hexToRgb,
   getType,
@@ -498,5 +527,11 @@ export default {
   countOccurrences,
   filterObjectNullKey,
   trim,
-  trimAll
+  trimAll,
+  throttle,
+  validPassword,
+  validUserName,
+  validURL,
+  validCarNum,
+  validBankNum
 }
