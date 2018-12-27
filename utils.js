@@ -1,3 +1,10 @@
+/*
+ * @Author: jrg 
+ * @Date: 2018-12-27 14:11:49 
+ * @Last Modified by: jrg
+ * @Last Modified time: 2018-12-27 15:20:52
+ */
+
 /**
  * Array
  * @param {*} arr 
@@ -16,17 +23,23 @@ const compact = arr => arr.filter(Boolean)
 const chunk = (arr, size) => Array.from({length: Math.ceil(arr.length / size)}, (v, i) => arr.slice(i * size, i * size + size))
 
 // 两个数组的差值，a数组中没有在b数组中的值组成的数组
-const defference = (a, b) => { const s = new Set(b); return a.filter(x => !s.has(x)) }
+const defference = (a, b) => {
+  const s = new Set(b)
+  return a.filter(x => !s.has(x))
+}
 
 // 两个数组的补集（a不在b中，b不在a中的组成的数组）
 const symmetricDifference = (a, b) => {
   const sA = new Set(a)
   const sB = new Set(b)
-  return [...a.filter(x => !sB.has(x)), ...b.filter(x => !sA.has(x))];
+  return [...a.filter(x => !sB.has(x)), ...b.filter(x => !sA.has(x))]
 }
 
 // 两个数组的交集
-const intersection = (a, b) => { const s = new Set(b); return a.filter(x => s.has(x)) }
+const intersection = (a, b) => {
+  const s = new Set(b)
+  return a.filter(x => s.has(x))
+}
 const similarity = (arr, values) => arr.filter(v => values.includes(v))
 
 // 去重
@@ -95,7 +108,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 async function sleepWork() {
   console.log('I\'m going to sleep for 1 second.')
   await sleep(1000)
-  console.log('I woke up after 1 second.');
+  console.log('I woke up after 1 second.')
 }
 sleepWork()
 
@@ -130,7 +143,7 @@ const round = (n, decimals = 0) => Number(`${Math.round(`${n}e${decimals}`)}e-${
 /**
  * Object
  */
-// 移除从 JSON 对象指定的属性之外的任何特性
+// 移除 JSON 对象指定的属性,并返回该属性组成对象
 const cleanObj = (obj, keysToKeep = [], childIncator) => {
   Object.keys(obj).forEach(key => {
     if (key === childIncator) {
@@ -176,8 +189,8 @@ const anagrams = str => {
 const capitalizeEveryWord = str => str.replace(/\b[a-z]/g, char => char.toUpperCase())
 
 // 从匹配转换字符串：someLabelThatNeedsToBeCamelized -> some-label-that-needs-to-be-camelized
-const fromCamelCase = (str, separator = "_") =>
-  str.replace(/([a-z\d])([A-Z])/g, "$1" + separator + "$2").replace(/([A-Z]+)([A-Z][a-z\d]+)/g, "$1" + separator + "$2").toLowerCase()
+const fromCamelCase = (str, separator = '_') =>
+  str.replace(/([a-z\d])([A-Z])/g, '$1' + separator + '$2').replace(/([A-Z]+)([A-Z][a-z\d]+)/g, '$1' + separator + '$2').toLowerCase()
 
 // 将字符串转换为匹配:some_database_field_name->someDatabaseFieldName
 const toCamelCase = str => str.replace(/^([A-Z])|[\s-_]+(\w)/g, (match, p1, p2, offset) => p2 ? p2.toUpperCase() : p1.toLowerCase())
@@ -215,7 +228,7 @@ const hexToRgb = hex => {
 }
 
 // 将 RGB 组件的值转换为 colorcode
-const RGBToHex = (r, g, b) => '#' + ((r << 16) + (g << 8) + b).toString(16).padStart(6, "0")
+const RGBToHex = (r, g, b) => '#' + ((r << 16) + (g << 8) + b).toString(16).padStart(6, '0')
 
 const isArray = val => !!val && Array.isArray(val)
 
@@ -235,6 +248,16 @@ const isPositiveInteger = data => /^[0-9]*[1-9][0-9]*$/.test(data)
 // 验证是否中文
 const isChineseName = name => /^[\u4E00-\u9FA5]{1,30}$/.test(name)
 
+
+// 检查是否是有效的email
+const validateEmail = str => /^(([^<>()\[\]\\.,;:\s@']+(\.[^<>()\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(str)
+
+// 检查是否为数字
+const validateNumber = n => !isNaN(parseFloat(n)) && isFinite(n) && Number(n) == n
+
+// 验证是否是有效的手机号
+const validatePhone = phone => /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/.test(phone)
+
 // 测量执行函数所用的时间
 const timeTaken = callback => {
   console.time('timeTaken')
@@ -242,25 +265,16 @@ const timeTaken = callback => {
   console.timeEnd('timeTaken')
   return r
 }
-console.log(timeTaken(() => Math.pow(2,100)))
-
-// 检查是否是有效的email
-const validateEmail = str => /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(str)
-
-// 检查是否为数字
-const validateNumber = n => !isNaN(parseFloat(n)) && isFinite(n) && Number(n) == n
-
-// 验证是否是有效的手机号
-const validatePhone = phone => /^1[345789]\d{9}$/.test(phone)
 
 /**
- * 将日期转为自己想要的格式（如果第二个参数不传，默认是：yy-mm-dd hh:mm:ss），如果不是内部的格式，则返回一个年月日时分秒的对象，自己组装成想要的格式
+ * 将日期转为自己想要的格式（如果第二个参数不传，默认是：yy-mm-dd hh:mm:ss），
+ * 如果不是内部的格式，则返回一个年月日时分秒的对象，自己组装成想要的格式
  * @param {*} t（date或者时间戳）
  * @param {*} format （自己想要的格式）
  */
-const formatDate = (t, format = "yy-mm-dd hh:mm:ss") => {
+const formatDate = (t, format = 'yy-mm-dd hh:mm:ss') => {
   const time = new Date(t)
-  const paddingZero = data => (data < 10 ? "0" + data : data)
+  const paddingZero = data => (data < 10 ? '0' + data : data)
 
   const y = time.getFullYear()
   const m = time.getMonth() + 1
@@ -270,16 +284,16 @@ const formatDate = (t, format = "yy-mm-dd hh:mm:ss") => {
   const s = paddingZero(time.getSeconds())
 
   let outputTime = null
-  if (format === "yy-mm-dd") {
-    outputTime = y + "-" + m + "-" + d
-  } else if (format === "yy-mm-dd hh:mm:ss") {
-    outputTime = y + "-" + m + "-" + d + " " + h + ":" + mi + ":" + s
-  } else if (format === "yy/mm/dd") {
-    outputTime = y + "/" + m + "/" + d
-  } else if (format === "yy/mm/dd hh:mm:ss") {
-    outputTime = y + "/" + m + "/" + d + " " + h + ":" + mi + ":" + s
-  } else if (format === "hh:mm:ss") {
-    outputTime = h + ":" + mi + ":" + s
+  if (format === 'yy-mm-dd') {
+    outputTime = y + '-' + m + '-' + d
+  } else if (format === 'yy-mm-dd hh:mm:ss') {
+    outputTime = y + '-' + m + '-' + d + ' ' + h + ':' + mi + ':' + s
+  } else if (format === 'yy/mm/dd') {
+    outputTime = y + '/' + m + '/' + d
+  } else if (format === 'yy/mm/dd hh:mm:ss') {
+    outputTime = y + '/' + m + '/' + d + ' ' + h + ':' + mi + ':' + s
+  } else if (format === 'hh:mm:ss') {
+    outputTime = h + ':' + mi + ':' + s
   } else {
     outputTime = { years: y, mouths: m, days: d, hours: h, minutes: mi, seconds: s }
   }
@@ -294,12 +308,12 @@ const formatDate = (t, format = "yy-mm-dd hh:mm:ss") => {
  */
 const getSomeDay = (format, date, showFormat) => {
   if ((format !== '+') && (format !== '-')) {
-    console.warn('第一个参数只能是"+"或者"-"字符')
+    console.warn('第一个参数只能是'+'或者'-'字符')
     return ''
   }
   if (!isPositiveInteger(date)) {
-    console.warn("第二个参数只能是正整数");
-    return "";
+    console.warn('第二个参数只能是正整数')
+    return ''
   }
   let basicTimeStamp = new Date().valueOf()
   let time
@@ -334,7 +348,7 @@ const _checkDate = val => {
     const year = val.substring(0, 4)
     const month = val.substring(4, 6)
     const date = val.substring(6, 8)
-    const date2 = new Date(year + "-" + month + "-" + date)
+    const date2 = new Date(year + '-' + month + '-' + date)
     if (date2 && date2.getMonth() == (parseInt(month) - 1)) {
       return true
     }
@@ -346,40 +360,40 @@ const _checkDate = val => {
 const _checkProv = val => {
   var pattern = /^[1-9][0-9]/
   var provs = {
-    11: "北京",
-    12: "天津",
-    13: "河北",
-    14: "山西",
-    15: "内蒙古",
-    21: "辽宁",
-    22: "吉林",
-    23: "黑龙江 ",
-    31: "上海",
-    32: "江苏",
-    33: "浙江",
-    34: "安徽",
-    35: "福建",
-    36: "江西",
-    37: "山东",
-    41: "河南",
-    42: "湖北 ",
-    43: "湖南",
-    44: "广东",
-    45: "广西",
-    46: "海南",
-    50: "重庆",
-    51: "四川",
-    52: "贵州",
-    53: "云南",
-    54: "西藏 ",
-    61: "陕西",
-    62: "甘肃",
-    63: "青海",
-    64: "宁夏",
-    65: "新疆",
-    71: "台湾",
-    81: "香港",
-    82: "澳门"
+    11: '北京',
+    12: '天津',
+    13: '河北',
+    14: '山西',
+    15: '内蒙古',
+    21: '辽宁',
+    22: '吉林',
+    23: '黑龙江 ',
+    31: '上海',
+    32: '江苏',
+    33: '浙江',
+    34: '安徽',
+    35: '福建',
+    36: '江西',
+    37: '山东',
+    41: '河南',
+    42: '湖北 ',
+    43: '湖南',
+    44: '广东',
+    45: '广西',
+    46: '海南',
+    50: '重庆',
+    51: '四川',
+    52: '贵州',
+    53: '云南',
+    54: '西藏 ',
+    61: '陕西',
+    62: '甘肃',
+    63: '青海',
+    64: '宁夏',
+    65: '新疆',
+    71: '台湾',
+    81: '香港',
+    82: '澳门'
   }
   if (pattern.test(val)) {
     if (provs[val]) {
@@ -482,5 +496,7 @@ export default {
   compact,
   deepFlatten,
   countOccurrences,
-  filterObjectNullKey
+  filterObjectNullKey,
+  trim,
+  trimAll
 }
