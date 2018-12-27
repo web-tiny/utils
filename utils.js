@@ -2,7 +2,7 @@
  * @Author: jrg 
  * @Date: 2018-12-27 14:11:49 
  * @Last Modified by: jrg
- * @Last Modified time: 2018-12-27 18:00:14
+ * @Last Modified time: 2018-12-27 18:08:24
  */
 
 /**
@@ -261,10 +261,10 @@ const validateNumber = n => !isNaN(parseFloat(n)) && isFinite(n) && Number(n) ==
 const validatePhone = phone => /^(0|86|17951)?(13[0-9]|15[012356789]|166|17[3678]|18[0-9]|14[57])[0-9]{8}$/.test(phone)
 
 // 验证有效的密码：至少1个大写字母，1个小写字母和1个数字，长度为6-16
-const validPassword = val => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d){6,16}/.test(val)
+const validPassword = val => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d){6,16}$/.test(val)
 
 //验证用户名，4到16位（字母，数字，下划线，减号）
-const validUserName = val => /^[a-zA-Z0-9_-]{4,16}/.test(val)
+const validUserName = val => /^[a-zA-Z0-9_-]{4,16}$/.test(val)
 
 // 验证url
 const validURL = val => /^((https?|ftp|file):\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(val)
@@ -273,7 +273,7 @@ const validURL = val => /^((https?|ftp|file):\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})
 const validCarNum = val => /^([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}(([0-9]{5}[DF])|([DF]([A-HJ-NP-Z0-9])[0-9]{4})))|([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳]{1})$/.test(val)
 
 // 验证银行卡号13-19位，第一位不为0
-const validBankNum = val => /^([1,9]{1})(\d{12,18})/.test(val)
+const validBankNum = val => /^([1,9]{1})(\d{12,18})$/.test(val)
 
 // 测量执行函数所用的时间
 const timeTaken = callback => {
