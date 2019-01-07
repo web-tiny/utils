@@ -441,14 +441,10 @@ const validateCardID = val => {
  * @param {*} obj 
  */
 const filterObjectNullKey = obj => {
-  if (isObject(obj)) {
-    for (const key in obj) {
-      !obj[key] && delete obj[key]
-    }
-    return obj
-  } else {
-    console.warn('入参必须为对象', obj)
+  for (const key in obj) {
+    !obj[key] && delete obj[key]
   }
+  return obj
 }
 
 /**
