@@ -242,7 +242,7 @@ const isString = val => typeof val === 'string'
 
 const isSymbol = val => typeof val === 'symbol'
 
-const isObject = val => Object.prototype.toString.call(val) === '[Object Object]'
+const isObject = val => Object.prototype.toString.call(val) === '[object Object]'
 
 // 判断正整数
 const isPositiveInteger = data => /^[0-9]*[1-9][0-9]*$/.test(data)
