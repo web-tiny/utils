@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>js异常处理</title>
+</head>
+<body>
+  <script>
+    window.onload = function () {
+      /**
+       * 一：try-catch异常处理：
+       * 只能捕获到运行时非异步错误，语法错误和异步错误捕捉不到
+       * 
+       */
+      // 运行时错误
+      try {
+        error    // 未定义变量 
+      } catch(e) {
+        console.log('我知道错误了')
+        console.log(e)
+      }
+
+      // 语法错误
+      try {
+        //var error = 'error'；   // 大写分号
+      } catch(e) {
+        console.log('我感知不到错误')
+        console.log(e)
+      }
+
+      // 异步错误
+      try {
+        setTimeout(() => {
+          error        // 异步错误
+        })
+      } catch(e) {
+        console.log('我感知不到错误')
+        console.log(e)
+      }
+
+      /**
+       * 二： window.onerror异常处理需要注意：
+       * 1：无法捕获语法错误
+       * 2：适用于全局捕获错误，需要写在所有js脚本前面，写在后面不能捕获异常
+       * 3：无法捕获网络异常
+       * 
+       */
+      /**
+       * @param {String}  msg    错误信息
+       * @param {String}  url    出错文件
+       * @param {Number}  row    行号
+       * @param {Number}  col    列号
+       * @param {Object}  error  错误详细信息
+       */
+      window.onerror = function (msg, url, row, col, error) {
+        console.log('我知道异步错误了')
+        console.log({
+          msg,  url,  row, col, error
+        })
+
+        // window.onerror方法中需要返回true，否则异常会向上抛出
+        return true
+      }
+
+      setTimeout(() => {
+        error
+      }, 1000)
+
+      /**
+       * 三：Promise错误:
+       * promise 错误只能通过catch来捕获，onerror和try-catch都无能为力
+       * 1：添加全局异常捕获事件
+       * 2：Promise都带上catch，
+       */
+      // window.addEventListener('error', (msg, url, row, col, error) => {
+      //   console.log('I know it is error of promise')
+      //   console.log(msg, url, row, col, error)
+      // }, true)
+
+      // 添加全局异常捕获事件
+      window.addEventListener('unhandledrejection', e => {
+        e.preventDefault()
+        console.log('I know it is error of promise')
+        console.log(e.reason)
+        return true
+      })
+
+      Promise.reject('promise error')
+      new Promise((resolve, reject) => {
+        reject('promise error')
+      })
+      new Promise(resolve => {
+        return resolve()
+      }).then((err) => {
+        throw 'promise error'
+      })
+
+      /**
+       * 四：Script error错误
+       * 1：通过跨域资源共享机制（cors）机制，为页面上的 script 标签添加 crossOrigin 属性
+       *    给后端在响应头里加上 Access-Control-Allow-Origin
+       */
+      // 动态为脚本加上crossOrigin,
+      const SCRIPT = document.createElement('script')
+      SCRIPT.crossOrigin = 'anonymous'
+      SCRIPT.src = url
+      document.body.appendChild(SCRIPT)
+      /**
+       * 但是，如果实际工程中用的是库，除了去修改源代码，可以通过劫持document.createElement来动态添加脚本的crossOrigin字段
+       *  但是这样做入侵了源码，可能存在兼容性问题
+       */
+      document.createElement = (function () {
+        const FN = document.createElement.bind(document)
+        return function (type) {
+          const RESULT = FN(type)
+          type === 'script' && (RESULT.crossOrigin = 'anonymous')
+          return RESULT
+        }
+      })()
+
+      /**
+       * 五：window.onerror能否捕获iframe的错误
+       * 1：父窗口直接使用 window.onerror 是无法直接捕获
+       * 2：如果你的 iframe 页面和你的主站是同域名的话，直接给 iframe 添加 onerror 事件即可
+       * 3：如果是不同域且iframe内容不受自己空值的话，除了看控制台的信息，是没法捕获的
+       */
+      window.frames[0].onerror = function (msg, url, row, col, error) {
+        console.log('我知道 iframe 的错误了，也知道错误信息')
+        console.log({
+          msg,  url,  row, col, error
+        })
+        return true
+      }
+    }
+  </script>
+</body>
+</html>
