@@ -1,8 +1,8 @@
 /*
  * @Author: jrg 
  * @Date: 2018-12-27 14:11:49 
- * @Last Modified by: jrg
- * @Last Modified time: 2018-12-27 18:08:24
+ * @Last Modified by: tiny.jiao@aliyun.com
+ * @Last Modified time: 2019-01-25 13:33:58
  */
 
 /**
@@ -230,7 +230,13 @@ const hexToRgb = hex => {
 // 将 RGB 组件的值转换为 colorcode
 const RGBToHex = (r, g, b) => '#' + ((r << 16) + (g << 8) + b).toString(16).padStart(6, '0')
 
-const isArray = val => !!val && Array.isArray(val)
+// const isArray = val => !!val && Array.isArray(val)
+/**
+ * 因为IE9,Firefox4+,Safari5+,Opera10.5+,chrome才实现Array.isArray方法
+ * 这样写更健壮
+ * @param {*} val 
+ */
+const isArray = val => typeof Array.isArray === 'function' ? Array.isArray(val) : Object.prototype.toString.call(val) === '[object Array]'
 
 const isBoolean = val => typeof val === 'boolean'
 

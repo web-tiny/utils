@@ -12,7 +12,7 @@
       /**
        * 一：try-catch异常处理：
        * 只能捕获到运行时非异步错误，语法错误和异步错误捕捉不到
-       * 
+       * catch一定不要不管，给点提示，让你能更好的调试bug
        */
       // 运行时错误
       try {
@@ -133,6 +133,17 @@
         })
         return true
       }
+
+      /**
+       * 错误类型：
+       * 1: Error
+       * 2: EvalError
+       * 3: RangeError
+       * 4: ReferenceError
+       * 5: SyntaxError
+       * 6: TypeError
+       * 7: URIError
+      */
     }
   </script>
 </body>
