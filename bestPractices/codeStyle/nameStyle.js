@@ -2,7 +2,7 @@
  * @Author: Tiny 
  * @Date: 2019-01-29 17:10:58 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-01-29 17:34:03
+ * @Last Modified time: 2019-01-30 10:31:35
  */
 
 // 命名
@@ -79,3 +79,12 @@ let object = {
     return this._count
   }
 }
+
+/** 
+ * 三元运算符：
+ *  应当仅仅用在条件赋值语句中，不要作为if语句的替代品
+*/
+// good
+let value = condition ? value1 : value2;
+// bad
+condition ? doSomething() : doSomethindElse()
