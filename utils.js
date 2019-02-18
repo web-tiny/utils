@@ -2,7 +2,7 @@
  * @Author: jrg 
  * @Date: 2018-12-27 14:11:49 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-01-25 13:33:58
+ * @Last Modified time: 2019-02-18 15:51:13
  */
 
 /**
@@ -443,12 +443,13 @@ const validateCardID = val => {
 }
 
 /**
- * 过滤对象中为false的键
+ * 过滤对象中为false的键,
+ * 注意：当值为0的时候，falsy值为false
  * @param {*} obj 
  */
 const filterObjectNullKey = obj => {
   for (const key in obj) {
-    !obj[key] && delete obj[key]
+    (obj[key] !== 0 && !obj[key]) && delete obj[key]
   }
   return obj
 }
