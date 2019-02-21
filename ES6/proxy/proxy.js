@@ -2,7 +2,7 @@
  * @Author: Tiny 
  * @Date: 2019-02-20 15:51:54 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-02-21 11:23:51
+ * @Last Modified time: 2019-02-21 18:37:51
  */
 
  /** 
@@ -363,3 +363,64 @@ const target11 = {
 }
 const proxy11 = new Proxy(target11, handler11)
 delete proxy11._prop
+
+/** 
+ * 7: defineProperty(target, propKey, propDesc)
+ *  ECMAScript6入门教程上说不能添加，但是我这里居然添加成功了？
+*/
+const handler12 = {
+  defineProperty(target, key, descriptor) {
+    return false
+  }
+}
+const target12 = {}
+const proxy12 = new Proxy(target12, handler12)
+target12.foo = 'bar'
+console.log(target12.foo) // bar
+
+/** 
+ * 8：getOwnPropertyDescriptor(target, propKey)：
+ *  拦截Object.getOwnPropertyDescriptor()，返回一个属性描述对象或者undefined
+*/
+const handler13 = {
+  getOwnPropertyDescriptor(target, key) {
+    if (key[0] === '_') {
+      return
+    }
+    return Object.getOwnPropertyDescriptor(target, key)
+  }
+}
+const target13 = {
+  _foo: 'bar',
+  baz: 'tar'
+}
+const proxy13 = new Proxy(target13, handler13)
+console.log(Object.getOwnPropertyDescriptor(proxy13, 'wat')) // undefined
+console.log(Object.getOwnPropertyDescriptor(proxy13, '_foo')) // undefined
+// { value: 'tar',
+//   writable: true,
+//   enumerable: true,
+//   configurable: true }
+console.log(Object.getOwnPropertyDescriptor(proxy13, 'baz'))
+
+/** 
+ * 9: getPropertyOf(target): 用来拦截获取对象原型，
+ * 具体来说就是拦截下面这些操作:
+ *  1：Object.prototype.__proto__
+ *  2: Object.prototype.isPrototypeOf()
+ *  3: Object.getPrototypeOf()
+ *  4: Reflect.getPrototypeOf()
+ *  5: instanceof
+*/
+/** 
+ * 注意：
+ *  1：getPrototypeOf方法的返回值必须是对象或者null，否则报错，
+ *  2：如果目标对象不可扩展，getPrototypeOf方法必须返回目标对象的原型对象
+*/
+const proto = {}
+const proxy14 = new Proxy({}, {
+  getPrototypeOf(target) {
+    return proto
+  }
+})
+console.log(Object.getPrototypeOf(proxy14) === proto) // true
