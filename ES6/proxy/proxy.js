@@ -51,7 +51,7 @@ console.log(proxy.age) // ReferenceError: Property "age" does not exist.
 */
 function createArray(...e) {
   let handler = {
-    get(target, propKey, receiver) {
+    get: function(target, propKey, receiver) {
       let index = Number(propKey)
 
       if (index < 0) {
@@ -70,7 +70,7 @@ console.log(arr[-2]) // b
 
 // 下面是利用get拦截实现一个生成各种DOM节点的通用函数dom
 const dom = new Proxy({}, {
-  get(target, property) {
+  get: function(target, property) {
     return function(attrs = {}, ...children) {
       const el = document.createElement(property)
       
@@ -93,7 +93,7 @@ const el = dom.div({id: 'body', class: 'body'},
   dom.ul({class: 'nameList'},
     dom.li({class: 'item'}, 'the web'),
     dom.li({class: 'item'}, 'food'),
-    dom.li({class: 'item'}, '...actualy that\'s it'),
+    dom.li({class: 'item'}, '...actualy that\'s it')
   )
 )
 document.body.appendChild(el)
@@ -106,7 +106,7 @@ const proxy1 = new Proxy({}, {
   get: function(target, property, receiver) {
     return receiver
   }
-})
+});
 console.log(proxy1.getReceiver === proxy1) // true
 
 const d = Object.create(proxy)
@@ -120,11 +120,11 @@ const target01 = Object.defineProperties({}, {
   foo: {
     value: 123,
     writable: false,
-    configurable: false,
+    configurable: false
   }
 })
 const handler01 = {
-  get(target, propKey) {
+  get: function(target, propKey) {
     return 'abc'
   }
 }
@@ -404,7 +404,7 @@ console.log(Object.getOwnPropertyDescriptor(proxy13, '_foo')) // undefined
 console.log(Object.getOwnPropertyDescriptor(proxy13, 'baz'))
 
 /** 
- * 9: getPropertyOf(target): 用来拦截获取对象原型，
+ * 9: getPrototypeOf(target): 用来拦截获取对象原型，
  * 具体来说就是拦截下面这些操作:
  *  1：Object.prototype.__proto__
  *  2: Object.prototype.isPrototypeOf()
@@ -424,3 +424,204 @@ const proxy14 = new Proxy({}, {
   }
 })
 console.log(Object.getPrototypeOf(proxy14) === proto) // true
+
+/** 
+ * 10: isExtensible(target): 拦截Object.isExtensible()
+ * 注意：
+ *  1: 该方法只能返回布尔值，否则返回值会被自动转为布尔值
+ *  2: 这个方法有一个强限制，它的返回值必须与目标对象的isExtensible属性保持一致，否则就会报错
+*/
+const proxy14 = new Proxy({}, {
+  isExtensible (target) {
+    console.log('called')
+    /** 
+     * TypeError: 'isExtensible' on proxy: trap result does not reflect extensibility of proxy target 
+     * (which is 'true')
+    */
+    // return 0
+
+    return true
+  }
+})
+console.log(Object.isExtensible(proxy14)) // called true
+
+/** 
+ * 11: ownKeys(target): 用于拦截对象自身属性的读取操作，
+ * 具体来说就是拦截以下操作：
+ *  1: Object.getOwnPropertyNames()
+ *  2: Object.getOwnPropertySymbols()
+ *  3: Object.keys()
+ *  4: for...in 
+ * 
+*/
+// 拦截Object.keys()
+const target15 = {
+  a: 1,
+  b: 2,
+  c: 3
+}
+const handler15 = {
+  ownKeys (target) {
+    return ['a']
+  }
+}
+const proxy15 = new Proxy(target15, handler15)
+console.log(Object.keys(proxy15)) // [ 'a' ]
+
+// 下面的例子拦截第一个字符为“_”的属性名
+const target16 = {
+  _bar: '_bar',
+  _prop: '_prop',
+  prop: 'prop'
+}
+const handler16 = {
+  ownKeys(target) {
+    return Reflect.ownKeys(target).filter(key => key[0] !== '_')
+  }
+}
+const proxy16 = new Proxy(target16, handler16)
+for (let key of Object.keys(proxy16)) {
+  console.log(key) // prop
+}
+
+/** 
+ * 注意：使用Object.keys()时，有三类属性会被ownKey方法自动过滤，不会返回:
+ *  1: 目标对象不存在的属性
+ *  2: 属性名为Symbol值
+ *  3: 不可遍历(enumerable)的属性
+*/
+const target17 = {
+  a: 1,
+  b: 2,
+  c: 3,
+  [Symbol.for('secret')]: '4'
+}
+Object.defineProperty(target17, 'key', {
+  enumerable: false,
+  configurable: true,
+  writable: true,
+  value: 'static'
+})
+const handler17 = {
+  ownKeys(target) {
+    return ['a', 'd', Symbol.for('secret'), 'key']
+  }
+}
+const proxy17 = new Proxy(target17, handler17)
+console.log(Object.keys(proxy17)) // [ 'a' ]
+
+// 拦截Object.getOwnPropertyNames()
+const proxy18 = new Proxy({'a': 1, 'f': 2}, {
+  ownKeys (target) {
+    return ['a', 'b', 'c']
+  }
+})
+console.log(Object.getOwnPropertyNames(proxy18)) // [ 'a', 'b', 'c' ]
+
+// 拦截for...in, ownKeys指定返回a，b属性，由于obj18没有这俩属性，因此没有任何输出
+const obj18 = {
+  hello: 'world'
+}
+const proxy18 = new Proxy(obj18, {
+  ownKeys (target) {
+    return ['a', 'b']
+  }
+})
+for(let key in proxy18) {
+  console.log(key)
+}
+
+/**
+ * ownKeys方法返回的数组成员，只能是字符串或 Symbol 值。
+ * 如果有其他类型的值，或者返回的根本不是数组，就会报错
+ */
+const proxy19 = new Proxy({}, {
+  ownKeys (target) {
+    // TypeError: 123 is not a valid property name
+    // return [123, true, undefined, null, {}, []]
+
+    // ['123']
+    return ['123']
+  }
+})
+console.log(Object.getOwnPropertyNames(proxy19))
+
+// 如果目标对象自身包含不可配置的属性，则该属性必须被ownKeys方法返回，否则报错
+const obj20 = {}
+Object.defineProperty(obj20, 'a', {
+  configurable: false,
+  enumerable: true,
+  value: 10
+})
+const proxy20 = new Proxy(obj20, {
+  ownKeys (target) {
+
+    // TypeError: 'ownKeys' on proxy: trap result did not include 'a'
+    // return ['b']
+
+    // [ 'b', 'a' ]
+    return ['b', 'a']
+  }
+})
+console.log(Object.getOwnPropertyNames(proxy20))
+
+
+/**
+ * 如果目标对象是不可扩展的，这时ownKeys方法返回的数组之中，必须包含原对象的所有属性，且不能包含多余的属性，否则报错
+ */
+const obj21 = {
+  a: 1
+}
+Object.preventExtensions(obj21)
+const proxy21 = new Proxy(obj21, {
+  ownKeys (target) {
+
+    // TypeError: 'ownKeys' on proxy: trap returned extra keys but proxy target is non-extensible
+    // return ['a', 'b']
+
+    // ['a']
+    return ['a']
+  }
+})
+console.log(Object.getOwnPropertyNames(proxy21))
+
+/**
+ * 12: preventExtensions(target):拦截Object.preventExtensions()
+ *  1: 该方法必须返回一个布尔值，否则会被自动转为布尔值
+ *  2: 这个方法有一个限制，只有目标对象不可扩展时，即Object.isExtensible(proxy)为false，
+ *     proxy.preventExtensions才能返回true，否则报错
+ */
+const proxy22 = new Proxy({}, {
+  preventExtensions(target) {
+    return true
+  }
+})
+// TypeError: 'preventExtensions' on proxy: trap returned truish but the proxy target is extensible
+Object.preventExtensions(proxy22)
+// 为了防止出现这个问题，通常要在proxy.preventExtentions方法里面调用一次Object.preventExtentions
+const proxy23 = new Proxy({}, {
+  preventExtensions (target) {
+    console.log('called') // called
+    Object.preventExtensions(target)
+    return true
+  }
+})
+Object.preventExtensions(proxy23)
+
+/**
+ * 13: setPrototypeOf(): 拦截Object.setPrototypeOf()
+ * 注意：
+ *  该方法只能返回布尔值，否则会被自动转为布尔值
+ *  如果目标对象不可扩展（non-extensible），setPrototypeOf方法不得改变目标对象的原型
+ *  
+ */
+// 只要修改target24的原型对象，就会报错
+const target24 = function () {}
+const handle24 = {
+  setPrototypeOf(target, proto) {
+    throw new Error('Changing the prototype is forbidden !')
+  }
+}
+const proto24 = {}
+const proxy24 = new Proxy(target24, handle24)
+Object.setPrototypeOf(proxy24, proto24) // Error: Changing the prototype is forbidden !
