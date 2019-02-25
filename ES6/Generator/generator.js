@@ -1,8 +1,8 @@
 /*
  * @Author: Tiny 
  * @Date: 2019-02-25 14:10:56 
- * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-02-25 18:23:57
+ * @Last Modified by: tiny.jiao
+ * @Last Modified time: 2019-02-25 22:20:42
  */
 
  /** 
@@ -26,6 +26,8 @@
   * 7: Generator.prototype.return(): 返回给定的值，并且终结遍历 Generator 函数
   * 8: next()、throw()、return() 的共同点
   * 9: yield* 表达式
+  * 10: 作为对象属性的Generator函数
+  * 11: Generator 函数的this 
  */
 function* helloworldGenerator() {
   yield 'hello'
@@ -460,3 +462,81 @@ function* iterTree(tree) {
 }
 const tree = [ 'a', ['b', 'c', [1, 2, 3, ['name', 'age', 'phone']]], ['d', 'e'] ]
 console.log([...iterTree(tree)]) // [ 'a', 'b', 'c', 1, 2, 3, 'name', 'age', 'phone', 'd', 'e' ]
+
+// 作为对象属性的 Generator 函数
+let obj = {
+  * myGeneratorMethod() {
+    // ..
+  }
+}
+// 等价于
+let obj = {
+  myGeneratorMethod: function* () {
+    // ...
+  }
+}
+
+/**
+ * Generator 函数的this
+ *  Generator 函数不能跟new命令一起使用，否则会报错
+ */
+function* F() {
+  yield this.x = 2
+  yield this.y = 3
+}
+new F() // TypeError: F is not a constructor
+
+
+// 怎样才能让Generator函数返回一个正常的对象实例，即可以用next方法，又可以获得正常的this？
+
+// 生成一个空对象，使用call方法绑定Generator函数内部的this
+function* F() {
+  this.a = 1
+  yield this.b = 2
+  yield this.c = 3
+}
+let obj = {}
+let f = F.call(obj)
+// 执行3次next方法，F内部的代码都执行完毕，才能取到obj.x
+console.log(f.next()) // { value: 2, done: false }
+console.log(f.next()) // { value: 3, done: false }
+console.log(f.next()) // { value: undefined, done: true }
+
+console.log(obj.a) // 1
+console.log(obj.b) // 2
+console.log(obj.c) // 3
+
+// 上面的代码，执行的遍历器对象是f，但生成的对象实例是obj，能否将两个对象统一？一个方法是将obj换成F.prototype
+function* F2() {
+  this.a = 1
+  yield this.b = 2
+  yield this.c = 3
+}
+let f = F2.call(F2.prototype)
+// 执行3次next方法，F内部的代码都执行完毕，才能取到obj.x
+console.log(f.next()) // { value: 2, done: false }
+console.log(f.next()) // { value: 3, done: false }
+console.log(f.next()) // { value: undefined, done: true }
+
+console.log(f.a) // 1
+console.log(f.b) // 2
+console.log(f.c) // 3
+
+// 再将F改成构造函数，就可以使用new命令了
+function* gen9() {
+  this.a = 1
+  yield this.b = 2
+  yield this.c = 3
+}
+function F3() {
+  return gen9.call(gen9.prototype)
+}
+let f = new F3()
+// 执行3次next方法，F内部的代码都执行完毕，才能取到obj.x
+console.log(f.next()) // { value: 2, done: false }
+console.log(f.next()) // { value: 3, done: false }
+console.log(f.next()) // { value: undefined, done: true }
+
+console.log(f.a) // 1
+console.log(f.b) // 2
+console.log(f.c) // 3
