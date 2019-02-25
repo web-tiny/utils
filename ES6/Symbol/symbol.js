@@ -2,7 +2,7 @@
  * @Author: Tiny 
  * @Date: 2019-02-22 14:10:57 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-02-22 17:26:49
+ * @Last Modified time: 2019-02-25 13:57:47
  */
 
  /** 
@@ -241,3 +241,146 @@ const concatArray = [1, 2].concat(a1).concat(a2)
 console.log(concatArray) // [ 1, 2, 3, 4, A2 [ 6 ] ]
 
 // Symbol.species属性指向一个构造函数，创建衍生对象时会使用该属性
+class MyArray extends Array {}
+const a = new MyArray(1, 2, 3)
+const b = a.map(x => x)
+const c = a.filter(x => x > 1)
+console.log(b instanceof MyArray) // true
+console.log(c instanceof MyArray) // true
+
+// 定义Symbol.species属性要采用get取值器
+class MyArray extends Array {
+  static get [Symbol.species] () {
+    return Array
+  }
+}
+const a = new MyArray()
+const b = a.map(x => x)
+// a.map(x => x)生成的衍生对象就不是MyArray实例，而是Array的实例
+console.log(b instanceof MyArray) // false
+console.log(b instanceof Array) // true
+
+/** 
+ * Symbol.math(): 指向一个函数
+ *  当执行str.math(myObject)时，如果该属性存在，会调用它，返回该方法的返回值
+ *  String.prototype.match(regexp)等同于
+ *  regexp[Symbol.match](this)
+*/
+class MyMatcher {
+  [Symbol.match] (str) {
+    return 'hello world'.indexOf(str)
+  }
+}
+console.log('h'.match(new MyMatcher)) // 0
+
+
+/** 
+ * Symbol.replace()属性指向一个方法，
+ * 当该对象被String.prototype.replace方法调用时，会返回该方法的返回值
+*/
+/** 
+ * Symbol.replace方法会收到两个参数，
+ * 第一个参数是replace方法正在作用的对象，
+ * 下面的例子是Hello，第二个参数是替换后的值，下面例子是World
+*/
+const x = {}
+x[Symbol.replace] = (...s) => console.log(s)
+'hello'.replace(x, 'world') // [ 'hello', 'world' ]
+
+/** 
+ * Symbol.search属性，指向一个方法，
+ * 当该对象被String.prototype.search方法调用时，会返回该方法的返回值
+ * String.prototype.search(regexp)等同于
+ * regexp[Symbol.search](this)
+*/
+class MySearch {
+  constructor (value) {
+    this.value = value
+  }
+  [Symbol.search] (str) {
+    return str.indexOf(this.value)
+  }
+}
+console.log('foobar'.search(new MySearch('foo'))) // 0
+
+/** 
+ * Symbol.split属性，指向一个方法，
+ * 当该对象被String.prototype.split方法调用时，会返回该方法的返回值
+*/
+// 使用Symbol.split重新定义字符串对象的split方法
+class MySplitter {
+  constructor(value) {
+    this.value = value
+  }
+  [Symbol.split] (str) {
+    let index = str.indexOf(this.value)
+    if (index === -1) {
+      return str
+    }
+    return [
+      str.substr(0, index),
+      str.substr(index + this.value.length)
+    ]
+  }
+}
+console.log('foobar'.split(new MySplitter('foo'))) // [ '', 'bar' ]
+console.log('foobar'.split(new MySplitter('bar'))) // [ 'foo', '' ]
+console.log('foobar'.split(new MySplitter('baz'))) // 'foobar'
+
+/** 
+ * Symbol.split：指向一个方法，
+ * 该对象被转为原始类型的值时，会调用这个方法，返回该对象对应的原始类型值
+ * 这个方法被调用时，会接受一个字符串参数，表示当前运算模式，一共有三种模式：
+ *  Number: 该场合需要转成数值
+ *  String: 该场合需要转成字符串
+ *  Default: 该场合可以转成数值，也可以转成字符串
+*/
+let obj = {
+  [Symbol.toPrimitive] (hint) {
+    switch (hint) {
+      case 'number':
+        return 123
+      case 'string':
+        return 'str'
+      case 'default':
+        return 'default'   
+      default:
+        throw new Errow()
+    }
+  }
+}
+console.log(2 * obj) // 246
+console.log(2 + obj) // 2default
+console.log(String(obj)) // str
+
+/** 
+ * Symbol.toStringTag:属性，指向一个方法。在该对象上面调用Object.prototype.toString方法时，
+ * 如果这个属性存在，它的返回值会出现在toString方法返回的字符串之中，表示对象的类型.
+ * 即：这个属性可以用来定制[object Object]或[object Array]中object后面的那个字符串
+*/
+console.log({ [Symbol.toStringTag]: 'Foo' }.toString()) // [object Foo]
+class Collection {
+  get [Symbol.toStringTag]() {
+    return 'xxx'
+  }
+}
+let x = new Collection()
+console.log(Object.prototype.toString.call(x)) // [object xxx]
+
+/** 
+ * Symbol.unscopables属性，指向一个对象。该对象指定了使用with关键字时，哪些属性会被with环境排除
+*/
+// 数组有 7 个属性，会被with命令排除
+// [Object: null prototype] {
+//   copyWithin: true,
+//   entries: true,
+//   fill: true,
+//   find: true,
+//   findIndex: true,
+//   includes: true,
+//   keys: true,
+//   values: true }
+console.log(Array.prototype[Symbol.unscopables])
+
+// ["copyWithin", "entries", "fill", "find", "findIndex", "includes", "keys", "values"]
+console.log(Object.keys(Array.prototype[Symbol.unscopables]))
