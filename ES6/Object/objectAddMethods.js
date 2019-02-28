@@ -2,7 +2,7 @@
  * @Author: Tiny 
  * @Date: 2019-02-27 16:43:30 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-02-27 18:13:36
+ * @Last Modified time: 2019-02-28 10:54:20
  */
 
  /** 
@@ -180,3 +180,65 @@ console.log(shallowMerge(target5, obj8)) // { foo: 123, bar: [Getter/Setter] }
 const clone = Object.create(Object.getPrototypeOf(obj), Object.getOwnPropertyDescriptors(obj))
 // 或者
 const shalloClone = (obj) => Object.create(Object.getPrototypeOf(obj), Object.getOwnPropertyDescriptors(obj))
+
+/** 
+ * Object.setPrototypeOf():ES6正式推荐的设置原型对象的方法
+ *  用来设置一个对象的prototype对象，返回参数对象本身
+ * 格式：Object.setPrototypeOf(object, prototype)
+ * 
+ * Object.getPrototypeOf(): 用来获取一个对象的原型对象
+*/
+const proto = {}
+const obj = { x: 10 }
+Object.setPrototypeOf(obj, proto)
+proto.y = 20
+proto.z = 40
+console.log(obj.x) // 10
+console.log(obj.y) // 20
+console.log(obj.z) // 40
+
+// 如果第一个参数不是对象，会自动转为对象。但是由于返回的还是第一个参数，所以这个操作不会产生任何效果
+console.log(Object.setPrototypeOf(1, {}) === 1) // true
+console.log(Object.setPrototypeOf('foo', {}) === 'foo') // true
+console.log(Object.setPrototypeOf(true, {}) === true) // true
+
+console.log(Object.getPrototypeOf(1)) // [Number: 0]
+console.log(Object.getPrototypeOf('foo')) // [String: '']
+console.log(Object.getPrototypeOf(true)) // [Boolean: false]
+
+/** 
+ * Object.keys()
+ * Object.values()
+ * Object.entries(): 返回对象自身所有可遍历属性的键值对数组
+*/
+// Object.entries()：会忽略Symbol值
+const obj9 = {
+  foo: 'bar',
+  baz: 40,
+  [Symbol('age')]: 90
+}
+const arrFromObj = Object.entries(obj9)
+console.log(arrFromObj) // [ [ 'foo', 'bar' ], [ 'baz', 40 ] ]
+
+// Object.entries方法的另一个用处是，将对象转为真正的Map结构
+const map = new Map(Object.entries(obj9))
+console.log(map) // Map { 'foo' => 'bar', 'baz' => 40 }
+
+// entries的实现
+function* entries(obj) {
+  for (const key of Object.keys(obj)) {
+    yield [key, obj[key]]
+  }
+}
+
+/** 
+ * Object.fromEntries(): 是Object.entries()的逆操作，用于将一个键值对数组转为对象，
+ * 注意：这个方法目前只有FireFox浏览器支持
+*/
+const arr3 = [
+  ['foo', 'bar'],
+  ['baz', 42],
+  ['name', 'rose']
+]
+const objFromarr =  Object.fromEntries(arr3)
+console.log(objFromarr)
