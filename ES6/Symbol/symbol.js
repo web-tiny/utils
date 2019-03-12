@@ -2,7 +2,7 @@
  * @Author: Tiny 
  * @Date: 2019-02-22 14:10:57 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-02-25 13:57:47
+ * @Last Modified time: 2019-03-12 11:07:05
  */
 
  /** 
@@ -38,7 +38,7 @@ console.log(String(sym2) + ' is my symbol') // Symbol(My symbol) is my symbol
 console.log(sym2.toString() + ' is my symbol') // Symbol(My symbol) is my symbol
 
 // Symbol 值也可以转为布尔值，但是不能转为数值
-let sym3 = Symbol('jrg')
+let sym3 = Symbol('jrg')  // true
 console.log(Boolean(sym3))
 // console.log(Number(sym3)) // TypeError: Cannot convert a Symbol value to a number
 
@@ -125,6 +125,8 @@ const objectSymbols = Object.getOwnPropertySymbols(obj3)
 console.log(objectSymbols) // [ Symbol(a), Symbol(b) ]
 // for...in不能遍历Symbol值
 for(let i in obj3) {
+  // c : 1
+  // d : 2
   console.log(i + ' : ' + obj3[i])
 }
 
@@ -192,6 +194,16 @@ console.log(Symbol.keyFor(s8)) // undefined
  *  9: Symbol.toPrimitive
  *  10: Symbol.toStringTag
  *  11: Symbol.unscopables
+ * 
+ * 可以使用这11个Symbol值做一些拦截器：
+ *  instance,
+ *  arr.concat(),
+ *  str.match(),
+ *  str.replace(),
+ *  str.search(),
+ *  str.split(),
+ *  str.toString(),
+ *  str.toPrimitive(),这个比较陌生，一般是值做默认转换的时候调用
 */
 
 // Symbol.hasInstance:使用instanceof运算符时，会调用这个方法
@@ -236,9 +248,9 @@ a1[0] = 3
 a1[1] = 4
 let a2 = new A2()
 a2[0] = 5
-a2[0] = 6
+a2[1] = 6
 const concatArray = [1, 2].concat(a1).concat(a2)
-console.log(concatArray) // [ 1, 2, 3, 4, A2 [ 6 ] ]
+console.log(concatArray) // [ 1, 2, 3, 4, A2 [ 5, 6 ] ]
 
 // Symbol.species属性指向一个构造函数，创建衍生对象时会使用该属性
 class MyArray extends Array {}
@@ -328,7 +340,7 @@ console.log('foobar'.split(new MySplitter('bar'))) // [ 'foo', '' ]
 console.log('foobar'.split(new MySplitter('baz'))) // 'foobar'
 
 /** 
- * Symbol.split：指向一个方法，
+ * Symbol.toPrimitive：指向一个方法，
  * 该对象被转为原始类型的值时，会调用这个方法，返回该对象对应的原始类型值
  * 这个方法被调用时，会接受一个字符串参数，表示当前运算模式，一共有三种模式：
  *  Number: 该场合需要转成数值
