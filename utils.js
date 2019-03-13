@@ -2,7 +2,7 @@
  * @Author: jrg 
  * @Date: 2018-12-27 14:11:49 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-02-18 15:51:13
+ * @Last Modified time: 2019-03-13 23:49:15
  */
 
 /**
@@ -43,9 +43,9 @@ const intersection = (a, b) => {
 const similarity = (arr, values) => arr.filter(v => values.includes(v))
 
 // 去重
-const uniqueValue = arr => [...new Set(arr)]
+const uniqueValue = arr => [...new Set(arr)];
 
-// 取第n倍个元素（按下标）
+// 取第n倍个元素（按下标)
 const everyNth = (arr, nth) => arr.filter((e, i) => i % nth === 0)
 
 // 初始化数组的指定长度的值
