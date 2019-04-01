@@ -2,7 +2,7 @@
  * @Author: jrg 
  * @Date: 2018-12-27 14:11:49 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-03-13 23:49:15
+ * @Last Modified time: 2019-04-02 00:41:39
  */
 
 /**
@@ -43,7 +43,7 @@ const intersection = (a, b) => {
 const similarity = (arr, values) => arr.filter(v => values.includes(v))
 
 // 去重
-const uniqueValue = arr => [...new Set(arr)];
+const uniqueValue = arr => [...new Set(arr)]
 
 // 取第n倍个元素（按下标)
 const everyNth = (arr, nth) => arr.filter((e, i) => i % nth === 0)
@@ -173,6 +173,24 @@ const objectFromPairs = arr => arr.reduce((a, v) => (a[v[0]] = v[1], a), {})
 
 // 从对象创建键值对数组的数组
 const objectToPairs = obj => Object.keys(obj).map( k => [k, obj[k]])
+
+// 对象深拷贝
+const deepCopy = obj => {
+  let objArr = Array.isArray(obj) ? [] : {}
+  if (obj && typeof obj === 'object') {
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        const e = obj[key]
+        if (e && typeof e ==='object') {
+          objArr[key] = deepCopy(e)
+        } else {
+          objArr[key] = e
+        }
+      }
+    }
+  }
+  return objArr
+}
 
 /**
  * String
@@ -466,6 +484,44 @@ const throttle = (fn, time) => {
   }, time)
 }
 
+// cookie
+const cookieOption = {
+  _get: (name) => {
+    let cookieName = encodeURIComponent(name) + '='
+		let	cookieStart = document.cookie.indexOf(cookieName)
+		let	cookieValue = null
+    let	cookieEnd = ''
+    
+		if(cookieStart > -1) {
+			cookieEnd = document.cookie.indexOf(';', cookieStart)
+			if(cookieEnd == -1) {
+				cookieEnd = document.cookie.length
+			}
+			cookieValue = decodeURIComponent(document.cookie.substring(cookieStart + cookieName.length, cookieEnd))
+		}
+		return cookieValue
+  },
+  _set: (name, value, expires, path, domain, secure) => {
+		let cookieText = encodeURIComponent(name) + '=' + encodeURIComponent(value)
+		if(expires instanceof Date) {
+			cookieText += '; expires=' + expires.toGMTString()
+		}
+		if(path) {
+			cookieText += '; path=' + path
+		}
+		if(domain) {
+			cookieText += '; domain=' + domain
+		}
+		if(secure) {
+			cookieText += '; secure'
+		}
+		document.cookie = cookieText
+  },
+  _unset: (name, path, domain, secure) => {
+		this._set(name, '', new Date(0), path, domain, secure)
+	}
+}
+
 export default {
   validateCardID,
   getSomeDay,
@@ -536,5 +592,7 @@ export default {
   validUserName,
   validURL,
   validCarNum,
-  validBankNum
+  validBankNum,
+  cookieOption,
+  deepCopy
 }
