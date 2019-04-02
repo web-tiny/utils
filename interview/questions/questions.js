@@ -2,7 +2,7 @@
  * @Author: tiny.jiao@aliyun.com 
  * @Date: 2019-04-01 22:22:06 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-04-02 00:46:04
+ * @Last Modified time: 2019-04-02 23:47:11
  */
 
 /** 
@@ -20,7 +20,7 @@
  * 9: $nextTick()
  * 10: 有哪些攻击方式
  * 11: http1和http2有哪些不同
- * 12: vue中虚拟DOM是什么东西
+ * 12: vue中虚拟DOM是什么东西，今天第二次被问到了，，
  * 13: querySelectAll()与document.getElementsByClassName()有什么区别
  *    1: W3C标准，querySelectAll()是W3C中Selectors的API规范[1],getElementsBy系列属于W3C的DOM规范[2]
  *    2: 浏览器兼容，querySelectAll()已被IE 8+、FF 3.5+、Safari 3.1+等良好支持，getElementsBy系列要IE9以上
@@ -31,6 +31,9 @@
  * 15: js垃圾回收机制
  * 16: 元素垂直剧中有几种实现方式？
  * 17: 性能优化方式有哪些？
+ * 18: watch和computed有什么区别及应用场景
+ * 19: 怎么实现Vue自己写的组件的按需加载
+ * 20: vue源码和element-ui的源码，了解多少？
 */
 
 // 对象深拷贝
@@ -68,3 +71,35 @@ const obj = {
 }
 console.log(obj)
 console.log(deepCopy(obj))
+
+/** 
+ * Vue组件的按需加载方法
+ * 
+*/
+// 1: resolve的方式，即Vue的异步组件
+{
+  path: '/promiseDemo',
+  name: 'PromiseDemo',
+  component: resolve => require(['../components/PromiseDemo'], resolve)
+}
+// 2: import 方式
+const ImportDemo = () => import('../components/PromiseDemo')
+const ImportDemo2 = () => import(/* webpackChunkName: 'ImportFuncDemo' */ '../components/ImportFuncDemo')
+const ImportDemo3 = () => import(/* webpackChunkName: 'ImportFuncDemo' */ '../components/ImportFuncDemo2')
+// 3: webpack提供的require.ensure()
+{
+  path: '/promiseDemo',
+  name: 'PromiseDemo',
+  component: resolve=> require.ensure([], ()=>resolve(require('../components/PromiseDemo')), 'demo')
+},
+{
+  path: '/Hello',
+  name: 'Hello',
+  component: resolve=> require.ensure([], ()=>resolve(require('../components/Hello')), 'demo')
+}
+
+/** 
+ * watch和computed有什么区别及应用场景
+ * watch应用场景：数据变化时需要做一些异步操作的时候，可以设置中间状态
+ * computed应用场景：复杂的逻辑计算的时候(是基于它们的响应式依赖进行缓存的,只有响应式依赖发生改变时才会重新求值)
+*/
