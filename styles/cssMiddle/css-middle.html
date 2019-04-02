@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+    <title>垂直居中</title>
+    <link rel="stylesheet" href="../base.css">
+    <style type="text/css">
+			/**
+       * 多行文字垂直居中:
+       *
+			 * 1：文本内容另用标签包裹，此标签用图片的属性display:inline-block
+			 * 2：父标签不能浮动：且加属性vertical-align: middle;/display: table-cell;
+			 * 
+			 */
+			
+			#wordMiddle {
+				height: 300px;
+				width: 400px;
+				border: 2px solid #f66;
+				font-size: 16px;
+				vertical-align: middle;
+				display: table-cell;
+				padding: 0 20px;
+			}
+			
+			#wordMiddle p {
+				display: inline-block;
+				/*vertical-align: middle;*/
+      }
+      
+			/**
+			 * 图片居中:
+			 * 方法一：使用空白图片让其垂直居中
+			 * 1：添加一个空img，让其height为100%，width：0
+			 * 2：让所有图片都有vertical-align:middle
+			 * 注意：透明图片和要显示的图片要连着写，避免出现空格
+			 * 也可以用span标签代替空白img(也可以是任意img，因为width：0，所以是隐藏的)，这样可以减少一次网络请求但是要加一句代码：diaplay:inline-block;从前端优化的角度推荐使用此方法，css如下：
+			 * span{display:inline-block; height:100%; width:0; vertical-align:middle;}
+			 */
+			
+			#imgMiddle1 {
+				height: 300px;
+				width: 300px;
+				border: 2px solid #FF6666;
+				text-align: center;
+				margin: 10px;
+			}
+			
+			.showImg {
+				height: 200px;
+				width: 200px;
+				vertical-align: middle;
+			}
+			
+			/*.hiddenImg {
+				height: 100%;
+				width: 0;
+				vertical-align: middle;
+			}*/
+			#imgMiddle1 span{
+				display:inline-block; 
+				height:100%; 
+				width:0; 
+				vertical-align:middle;
+			}
+			/**
+			 * 方法二：使用display:table-cell和vertical-align: middle让图片垂直居中
+			 * 说明：
+			 *:1：为什么img外层还要嵌套一层div？因为此方法不支持外层标签浮动。
+			 *:2：图片父元素添加属性：display: table-cell;vertical-align: middle;
+			 *:3：图片本身添加属性：vertical-align: middle;
+			 * 
+			 */
+			
+			#tableCellMiddle li {
+				margin: 10px;
+			}
+			
+			ul li {
+				list-style-type: none;
+				float: left;
+			}
+			
+			#tableCellMiddle li div {
+				display: table-cell;
+				vertical-align: middle;
+				text-align: center;
+				height: 400px;
+				width: 400px;
+				border: 2px solid #f66;
+			}
+			
+			li img {
+				width: 250px;
+				height: 250px;
+			}
+			
+			#tableCellMiddle li div img {
+				vertical-align: middle;
+			}
+			/**
+			 * 方法三：透明图片+背景定位
+			 *:1：利用：background-position: center;background-repeat: no-repeat;
+			 *:2：background-image写在页面中，因为实际项目中img地址肯定是动态的
+			 */
+			
+			ul:after {
+				content: '';
+				clear: both;
+				display: inline-block;
+			}
+			
+			#positioncenterMiddle li {
+				margin: 10px;
+				border: 2px solid #f66;
+				width: 200px;
+				height: 200px;
+			}
+			
+			#positioncenterMiddle li img {
+				display: block;
+				height: 100%;
+				width: 100%;
+				background-position: center;
+				background-repeat: no-repeat;
+			}
+			/**
+			 * 方法四：display:inline-block和font-size垂直居中
+			 * 说明：
+			 * 1：img外的标签需是a标签或span这类inline属性的标签，div标签也可以，但是css代码多些:display:inline; display:inline-block先变成inline属性，再转变成inline-block属性。
+			 * 2：此方法只需要两层标签即可，代码超简洁，但是只适用于多图垂直居中对齐的情况。因为其对齐原理是相邻的图片居中对齐，如果只是一个图片，vertical-align:middle就只有与空格对齐了
+			 */
+			#inlineBlockFontsize a{
+				display: inline-block;
+				vertical-align: middle;
+				text-align: center;	
+				font-size: 120px;
+			}
+			#inlineBlockFontsize a img{
+				vertical-align: middle;		
+				border: 2px solid #f66;	
+				width: 100px;
+				height: 100px;
+				padding:10px;	
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="wordMiddle">
+			<p>多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中</p>
+			<p>多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中多行文本居中</p>
+		</div>
+		<div id="imgMiddle1">
+			<img class="showImg" src="../img/mm1.jpg" /><!--<img src="./img/mm2.jpg" class="hiddenImg" />--><span></span>
+		</div>
+		<ul id="tableCellMiddle">
+			<li>
+				<div><img src="../img/mm2.jpg" /></div>
+			</li>
+			<li>
+				<div><img src="../img/mm1.jpg" /></div>
+			</li>
+			<li>
+				<div><img src="../img/mm2.jpg" /></div>
+			</li>
+		</ul>
+		<ul id="positioncenterMiddle">
+			<li><img style="background-image: url(../img/mm1.jpg)" /></li>
+			<li><img style="background-image: url(../img/mm2.jpg)" /></li>
+		</ul>
+		<div id="inlineBlockFontsize">
+			<a href=""><img src="../img/mm1.jpg"/></a>
+			<a href=""><img src="../img/mm2.jpg"/></a>
+			<a href=""><img src="../img/mm2.jpg"/></a>
+			<a href=""><img src="../img/mm2.jpg"/></a>
+		</div>
+	</body>
+
+</html>
