@@ -1,8 +1,8 @@
 /*
  * @Author: tiny.jiao@aliyun.com 
  * @Date: 2019-04-03 23:14:06 
- * @Last Modified by:   tiny.jiao@aliyun.com 
- * @Last Modified time: 2019-04-03 23:14:06 
+ * @Last Modified by: tiny.jiao@aliyun.com
+ * @Last Modified time: 2019-08-01 20:48:17
  */
 // 生成字符串的所有字谜 
 const anagrams = str => {
@@ -36,3 +36,6 @@ const trim = str => str.replace(/(^\s*)|(\s*$)/g, '')
 
 // 去掉字符串的所有空格
 const trimAll = str => str.replace(/\s/g,'')
+
+// 判断一个字符是由2个字节还是4个字节组成的最简单方法
+const is32Bit = c => c.codePointAt(0) > 0xFFFF;
