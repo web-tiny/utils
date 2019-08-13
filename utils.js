@@ -2,7 +2,7 @@
  * @Author: jrg 
  * @Date: 2018-12-27 14:11:49 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-04-02 00:41:39
+ * @Last Modified time: 2019-04-03 23:29:32
  */
 
 /**
@@ -273,7 +273,6 @@ const isPositiveInteger = data => /^[0-9]*[1-9][0-9]*$/.test(data)
 
 // 验证是否中文
 const isChineseName = name => /^[\u4E00-\u9FA5]{1,30}$/.test(name)
-
 
 // 检查是否是有效的email
 const validateEmail = str => /^(([^<>()\[\]\\.,;:\s@']+(\.[^<>()\[\]\\.,;:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(str)
