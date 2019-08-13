@@ -1,0 +1,25 @@
+{
+  "name": "utils",
+  "version": "1.0.0",
+  "description": "utils",
+  "main": "utils.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/web-tiny/utils.git"
+  },
+  "author": "tiny.jiao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/web-tiny/utils/issues"
+  },
+  "homepage": "https://github.com/web-tiny/utils#readme",
+  "devDependencies": {
+    "lodash": "^4.17.15"
+  }
+}

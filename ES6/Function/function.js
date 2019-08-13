@@ -2,7 +2,7 @@
  * @Author: tiny.jiao@aliyun.com
  * @Date: 2019-08-12 22:14:38
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-08-12 23:28:33
+ * @Last Modified time: 2019-08-13 13:15:15
  */
 
 /** 
@@ -51,3 +51,14 @@ function Fibonacci2 (n, ac1 = 1, ac2 = 1) {
   return Fibonacci2(n - 1, ac2, ac1 + ac2);
 }
 console.log(Fibonacci2(100));
+console.log(Fibonacci2(1000));
+console.log(Fibonacci2(10000));
+
+// 尾递归优化的实现
+function sum (x, y) {
+  return y > 0 ? sum(x + 1, y - 1) : x;
+}
+console.log(sum(1, 10))
+
+function /**foo comment */ foo () {}
+console.log(foo.toString())
