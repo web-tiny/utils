@@ -2,7 +2,7 @@
  * @Author: Tiny 
  * @Date: 2019-02-22 14:10:57 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-03-12 11:07:05
+ * @Last Modified time: 2019-07-16 13:26:48
  */
 
  /** 
@@ -298,7 +298,12 @@ console.log('h'.match(new MyMatcher)) // 0
 const x = {}
 x[Symbol.replace] = (...s) => console.log(s)
 'hello'.replace(x, 'world') // [ 'hello', 'world' ]
-
+const yy = {
+  [Symbol.replace] (...s) {
+    console.log(s)
+  }
+}
+'tiny'.replace(yy, 'jiao')
 /** 
  * Symbol.search属性，指向一个方法，
  * 当该对象被String.prototype.search方法调用时，会返回该方法的返回值
