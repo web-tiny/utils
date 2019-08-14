@@ -2,7 +2,7 @@
  * @Author: Tiny
  * @Date: 2019-08-13 14:05:54
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-08-13 16:29:08
+ * @Last Modified time: 2019-08-14 18:05:59
  */
 /** 
  * 函数式编程：
@@ -40,4 +40,23 @@ const reverse = x => x.reverse();
 const last = compose(head, reverse);
 console.log(last(['jumpDown', 'roundhouse', 'uppdercut']));
 
+
+/** 
+ * 函数签名：
+ */
+// id :: x -> x
 const id = x => x;
+
+const Container = function (x) {
+  this.__value = x;
+}
+Container.of = x => new Container(x);
+
+console.log(Container.of(3))
+console.log(Container.of(Container.of({ name: 'yoda' }))) // Container { __value: Container { __value: { name: 'yoda' } } }
+
+// functor
+// (a -> b) -> Container a -> Container b
+Container.prototype.map = f => Container.of(f(this.__value));
+
+console.log(Container.of('tiny').map(s => s.toUpperCase()))
