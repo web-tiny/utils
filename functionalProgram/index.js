@@ -2,7 +2,7 @@
  * @Author: Tiny
  * @Date: 2019-08-13 14:05:54
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-08-14 22:51:56
+ * @Last Modified time: 2019-08-16 13:35:59
  */
 /** 
  * 函数式编程：
@@ -11,7 +11,7 @@
  * 2：函数式编程的哲学就是假定副作用是造成不正当行为的主要原因。
 */
 
-const curry = require('lodash').curry;
+const { _, curry }= require('lodash');
 
 const match = curry((what, str) => str.match(what));
 
@@ -52,11 +52,25 @@ const Container = function (x) {
 }
 Container.of = x => new Container(x);
 
-console.log(Container.of(3))
+console.log(Container.of(3)) // Container { __value: 3 }
 console.log(Container.of(Container.of({ name: 'yoda' }))) // Container { __value: Container { __value: { name: 'yoda' } } }
 
 // functor
 // (a -> b) -> Container a -> Container b
 Container.prototype.map = f => Container.of(f(this.__value));
+const result2 = Container.of(2).map(function (a) { return a + 2 })
+console.log(result);
 
-console.log(Container.of('tiny').map(s => s.toUpperCase()))
+const result3 = Container.of('bombs').map(_.concat(' away').map(_.property('length')))
+console.log(result2)
+// Container.of(2).chain(two => Container.of(3).map(add(two)));
+
+Container.prototype.ap = other_comtainer => other_comtainer.map(this.__value);
+
+// 函数式程序：通过管道把数据在一系列纯函数间传递的程序
+
+/** 
+ * TODO:
+ * 链表的javascript实现(js数据接口这本书)
+ * 
+*/
