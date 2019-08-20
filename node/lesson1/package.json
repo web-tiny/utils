@@ -4,11 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "async": "^3.1.0",
+    "cheerio": "^1.0.0-rc.3",
+    "eventproxy": "^1.0.0",
+    "express": "^4.17.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^6.2.0",
+    "node-sha1": "^1.0.1",
+    "should": "^13.2.3",
+    "superagent": "^5.1.0",
+    "utility": "^1.16.1"
   }
 }
