@@ -6,6 +6,9 @@
   "scripts": {
     "test": "mocha"
   },
+  "directories": {
+    "test": "test"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {

@@ -2,7 +2,7 @@
  * @Author: Tiny
  * @Date: 2019-08-20 15:13:20
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-08-20 15:44:52
+ * @Last Modified time: 2019-08-21 10:08:47
  */
 
 const main = require('../main');
@@ -21,16 +21,16 @@ describe('test/main.test.js', () => {
   it('should throw when n > 10', () => {
     (() =>{
       main.fibonacci(11);
-    }).should.throw('n should <=10');
+    }).should.throw('n should <= 10');
   });
   it('should throw when n < 0', () => {
     (() =>{
       main.fibonacci(-1);
-    }).should.throw('n should >=0');
+    }).should.throw('n should >= 0');
   });
   it('should throw when n isnt Number', () => {
     (() =>{
       main.fibonacci('error');
-    }).should.throw('n should should be a Number');
+    }).should.throw('n should be a Number');
   });
 });

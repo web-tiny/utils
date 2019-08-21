@@ -2,7 +2,7 @@
  * @Author: tiny.jiao@aliyun.com
  * @Date: 2019-08-19 23:13:58
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-08-20 15:08:47
+ * @Last Modified time: 2019-08-21 10:35:15
  */
 // 这句的意思就是引入 `express` 模块，并将它赋予 `express` 这个变量等待使用。
 const express = require('express');
@@ -130,7 +130,7 @@ app.listen(3000, function () {
  * 5:学习使用async来控制并发连接数
  * 6:测试用例：mocha, should, istanbul
  *  1):学习使用测试框架：mocha
- *  2):学习使用断言库 should
+ *  2):学习使用断言库 should/chai
  *  3):学习使用测试率覆盖工具 istanbul
  *  4):简单Makefile的编写
 */

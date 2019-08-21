@@ -2,7 +2,7 @@
  * @Author: Tiny
  * @Date: 2019-08-20 15:10:37
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-08-20 15:48:19
+ * @Last Modified time: 2019-08-21 13:27:56
  */
 
 const fibonacci = n => {
@@ -25,4 +25,4 @@ if (require.main === module) {
   console.log('fibonacci(' + n + ') is', fibonacci(n));
 }
 
-exports.fibonacci = fibonacci;
+module.exports = fibonacci;

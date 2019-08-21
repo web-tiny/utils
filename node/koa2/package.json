@@ -1,0 +1,20 @@
+{
+  "name": "koa2",
+  "version": "1.0.0",
+  "description": "Koa2",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [
+    "koa",
+    "async"
+  ],
+  "author": "tiny",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.8.1",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0"
+  }
+}
