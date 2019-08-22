@@ -1,0 +1,25 @@
+{
+  "name": "view-koa",
+  "version": "1.0.0",
+  "description": "koa nunjucks as view",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node --use_strict app.js"
+  },
+  "keywords": [
+    "koa",
+    "async",
+    "nunjucks"
+  ],
+  "author": "tiny",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.8.1",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0",
+    "mime": "^2.4.4",
+    "mz": "^2.7.0",
+    "nunjucks": "^3.2.0"
+  }
+}

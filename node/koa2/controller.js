@@ -2,7 +2,7 @@
  * @Author: Tiny 
  * @Date: 2019-08-21 16:50:54 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-08-21 17:31:13
+ * @Last Modified time: 2019-08-22 10:07:14
  */
 const fs = require('fs');
 
@@ -31,6 +31,7 @@ const addControllers = (router, dir) => {
     .forEach(f => {
       console.log(`process controllers: ${f}...`);
       let mapping = require(__dirname + '/' + dir + '/' + f)
+      
       addMapping(router, mapping)
     })
 }
