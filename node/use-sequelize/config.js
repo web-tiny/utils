@@ -2,12 +2,12 @@
  * @Author: tiny.jiao@aliyun.com 
  * @Date: 2019-08-22 21:31:49 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-08-22 23:35:27
+ * @Last Modified time: 2019-08-23 11:18:57
  */
 
 const config = {
-  database: 'test',
-  username: 'user_info',
+  database: 'tiny_database',
+  username: 'root',
   password: '123',
   host: 'localhost',
   port: 3306
