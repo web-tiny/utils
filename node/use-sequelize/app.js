@@ -2,7 +2,7 @@
  * @Author: tiny.jiao@aliyun.com 
  * @Date: 2019-08-22 22:19:00 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-08-23 15:54:01
+ * @Last Modified time: 2019-08-26 10:17:17
  */
 
 const SequeLize = require('sequelize');
@@ -92,7 +92,7 @@ Pet.create({
   birth: '2008-08-08',
   createdAt: now,
   updatedAt: now,
-  version: 0
+  version: 1
 }).then(function (p) {
   console.log('created.' + JSON.stringify(p));
 }).catch(function (err) {

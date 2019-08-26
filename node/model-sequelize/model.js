@@ -2,7 +2,7 @@
  * @Author: Tiny 
  * @Date: 2019-08-23 16:08:36 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-08-23 17:47:37
+ * @Last Modified time: 2019-08-26 10:55:05
  */
 
 //  scan all models defined in models:
@@ -25,3 +25,4 @@ for (const f of js_files) {
 module.exports.sync = () => {
   db.sync();
 }
+
