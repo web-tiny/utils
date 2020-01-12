@@ -1,8 +1,8 @@
 /*
  * @Author: tiny.jiao 
  * @Date: 2019-02-25 22:33:33 
- * @Last Modified by: tiny.jiao
- * @Last Modified time: 2019-02-25 23:39:40
+ * @Last Modified by: tiny.jiao@aliyun.com
+ * @Last Modified time: 2020-01-09 14:21:15
  */
 
  /**
@@ -88,7 +88,7 @@ function* longRunningTask(value1) {
   }
 }
 // 然后使用一个函数按次序自动执行所有步骤
-scheduler(longRunningTask(initialValue));
+scheduler(longRunningTask('initialValue'));
 
 function scheduler(task) {
   let taskObj = task.next(task.value);

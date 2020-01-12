@@ -2,16 +2,19 @@
  * @Author: tiny.jiao@aliyun.com 
  * @Date: 2019-04-01 22:22:06 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-04-02 23:47:11
+ * @Last Modified time: 2020-01-12 23:27:54
  */
 
 /** 
  * 从面试中发现自己的问题所在，不断总结，不断进步
  * 1: vue-router实现原理？
- * 2: 遍历数组，指定条件下跳出循环，不用for，如何做？
- * 3: 基本数据类型
+ *  前端路由:
+ *  1): hash模式:http://www.xxx.com/#/login
+ *  这种#后面的hash值变化不会导致浏览器向服务器发出请求,每次hash值变化,还会出发hashChange事件
+ * 2: 遍历数组，指定条件下跳出循环，不用for，如何做？some()/every()
+ * 3: 基本数据类型: Boolean, String, Number, undefined, null, Symble, BigInt
  * 4: 原型链
- * 5: 闭包
+ * 5: 闭包, 
  * 6: vue双向数据绑定实现原理
  * 7: 深拷贝和浅拷贝的区别，及如何实现？
  *    深拷贝：不仅将原对象的各个属性逐个复制，而且将原对象各个属性包含的对象也依次采用深复制的方法递归复制到新对象上
@@ -35,6 +38,26 @@
  * 19: 怎么实现Vue自己写的组件的按需加载
  * 20: vue源码和element-ui的源码，了解多少？
 */
+
+/**
+ * 
+ * 1: vue-router实现原理？
+ * 前端路由:
+ *  1): hash模式:http://www.xxx.com/#/login, 2014年之前主流都是通过hash来实现路由
+ *  这种#后面的hash值变化不会导致浏览器向服务器发出请求,每次hash值变化,还会出发hashChange事件,通过监听hashchange来实现更新页面部分内容的操作
+ *  2): history模式
+ *  2014后,H5标准的发布,多了两个api,pushState,replaceState,通过这两个api可以改变url地址且不会发送请求,同时还有popstate事件,但是原理跟hash实现相同的,但是H5实现单页路由就不会有#,但是当用户刷新页面操作时浏览器还是会向服务器发送请求,所以需要服务器支持
+ */
+function matchAndUpdate() {
+  // todo匹配路径  做dom更新操作
+}
+window.addEventListener('hashchange', matchAndUpdate);
+
+function matchAndUpdate2() {
+  // todo匹配路径  做dom更新操作
+}
+window.addEventListener('popstate', matchAndUpdate2);
+
 
 // 对象深拷贝
 const deepCopy = obj => {

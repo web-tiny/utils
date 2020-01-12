@@ -2,13 +2,41 @@
  * @Author: tiny.jiao@aliyun.com 
  * @Date: 2019-08-22 22:19:00 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-08-26 10:17:17
+ * @Last Modified time: 2019-09-04 23:28:44
  */
 
 const SequeLize = require('sequelize');
 const config = require('./config');
 
 console.log('init sequelize...');
+
+const formatDate = (t, format = 'yy-mm-dd hh:mm:ss') => {
+  const time = new Date(t)
+  const paddingZero = data => (data < 10 ? '0' + data : data)
+
+  const y = time.getFullYear()
+  const m = time.getMonth() + 1
+  const d = paddingZero(time.getDate())
+  const h = paddingZero(time.getHours())
+  const mi = paddingZero(time.getMinutes())
+  const s = paddingZero(time.getSeconds())
+
+  let outputTime = null
+  if (format === 'yy-mm-dd') {
+    outputTime = y + '-' + m + '-' + d
+  } else if (format === 'yy-mm-dd hh:mm:ss') {
+    outputTime = y + '-' + m + '-' + d + ' ' + h + ':' + mi + ':' + s
+  } else if (format === 'yy/mm/dd') {
+    outputTime = y + '/' + m + '/' + d
+  } else if (format === 'yy/mm/dd hh:mm:ss') {
+    outputTime = y + '/' + m + '/' + d + ' ' + h + ':' + mi + ':' + s
+  } else if (format === 'hh:mm:ss') {
+    outputTime = h + ':' + mi + ':' + s
+  } else {
+    outputTime = { years: y, mouths: m, days: d, hours: h, minutes: mi, seconds: s }
+  }
+  return outputTime
+}
 
 // 链接数据库
 const sequelize = new SequeLize(config.database, config.username, config.password, {
@@ -30,15 +58,15 @@ const Pet = sequelize.define('pet', {
   name: SequeLize.STRING(100),
   gender: SequeLize.BOOLEAN,
   birth: SequeLize.STRING(10),
-  createdAt: SequeLize.BIGINT,
-  updatedAt: SequeLize.BIGINT,
+  createdAt: SequeLize.STRING(50),
+  updatedAt: SequeLize.STRING(50),
   version: SequeLize.BIGINT
 }, {
   timestamps: false
 })
 
 let now = Date.now();
-
+// now = formatDate(now)
 // 往数据库写入东西
 // (async () => {
 //   const dog = await Pet.create({
@@ -66,11 +94,11 @@ Pet.findAll({
  * 将gender为false的值改为0
 */
 Pet.update({
-  gender: 9
+  gender: 1
 }, {
   // 过滤
   where: {
-    gender: 0,
+    gender: 9,
     name: 'tiny'
   }
 }).then(()=> {
@@ -87,12 +115,12 @@ Pet.destroy({
 // add
 Pet.create({
   id: now,
-  name: 'Tiny',
+  name: 'jrg',
   gender: false,
   birth: '2008-08-08',
   createdAt: now,
   updatedAt: now,
-  version: 1
+  version: 0
 }).then(function (p) {
   console.log('created.' + JSON.stringify(p));
 }).catch(function (err) {
