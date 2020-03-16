@@ -2,7 +2,7 @@
  * @Author: tiny.jiao@aliyun.com 
  * @Date: 2019-04-01 22:22:06 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2020-01-12 23:27:54
+ * @Last Modified time: 2020-01-14 21:00:59
  */
 
 /** 
@@ -37,6 +37,7 @@
  * 18: watch和computed有什么区别及应用场景
  * 19: 怎么实现Vue自己写的组件的按需加载
  * 20: vue源码和element-ui的源码，了解多少？
+ * 21: vue自定义指令
 */
 
 /**
@@ -126,3 +127,36 @@ const ImportDemo3 = () => import(/* webpackChunkName: 'ImportFuncDemo' */ '../co
  * watch应用场景：数据变化时需要做一些异步操作的时候，可以设置中间状态
  * computed应用场景：复杂的逻辑计算的时候(是基于它们的响应式依赖进行缓存的,只有响应式依赖发生改变时才会重新求值)
 */
+
+/**
+ * 8: Vue导航守卫
+ * 1): 全局: beforeEach()/beforeResolve():全局解析守卫/afterEach():全局后置钩子
+ * 2): 路由独享: beforeEnter()
+ * 3): 组件内守卫: beforeRouteEnter() / beforeRouteUpdate() /  beforeRouteLeave()
+ * 完整的流程: 
+ * 1导航被触发 -> 2失活组件 beforeRouteLeave() -> 3全局 beforeEach() -> 4 重用组件调用 beforeRouteUpdate() -> 5 在路由配置里调用 beforeEnter() -> 6 被激活的组件 beforeRouteEnter() -> 7 全局的解析守卫 beforeResolve() -> 8 导航被确认 -> 9 全局 afterEach() -> 10 触发dom更新
+ */ 
+
+/**
+ * vue自定义指令
+ * 1: 全局,
+ * 2: 局部
+ */
+// 全局自定义指令
+Vue.directive('focus', {
+  bind: el => {
+    el.focus()
+  },
+  inserted: el => {
+    el.focus()
+  },
+  update:() => {
+
+  },
+  componentUpdated: () => {
+
+  },
+  unbind: () => {
+    
+  }
+})

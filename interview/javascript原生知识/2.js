@@ -2,15 +2,15 @@
  * @Author: Tiny 
  * @Date: 2020-01-03 17:10:03 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2020-01-07 23:30:48
+ * @Last Modified time: 2020-01-17 17:36:10
  */
 
 /**
  * 原生js你知道多少?
  * 1: 函数的arguments为什么不是数组？如何转化成数组？
  * 2: forEach中return有效果吗？如何中断forEach循环？
- * 3: JS判断数组中是否包含某个值?
- * 4: JS中flat---数组扁平化?
+ * 3: JS判断数组中是否包含某个值,有几种方法?
+ * 4: JS中flat---数组扁平化,有多少种方法?
  * 5: JS数组的高阶函数: map/reduce/filter/sort/some/every/find(能不能分别实现他们?)
  * 6: 能不能模拟实现new的功能
  * 7: 能不能模拟实现bind功能
@@ -54,19 +54,25 @@
  * 4: JS中flat---数组扁平化?
  */
 // 一: es6的flat方法
-array = arrray.flat(Infinity);
+let arrray = [1, [2, 3, [4,5 ]], 6]
+let array1 = arrray.flat(Infinity);
+console.log(array1) // [ 1, 2, 3, 4, 5, 6 ]
 
 // 二: replace + split
-array = str.replace(/(\[|\])/g, '').split(',');
+let str2 = String([1, [2, 3, [4,5 ]], 6])
+let array2 = str2.replace(/(\[|\])/g, '').split(',');
+console.log(array2) // [ '1', '2', '3', '4', '5', '6' ]
 
 // 三: replace + JSON.parse
-str = str.replace(/(\[|\])/g, '');
-str = '[' + str + ']';
-array = JSON.parse(str);
+let str3 = [1, [2, 3, [4,5 ]], 6].toString()
+str3 = str3.replace(/(\[|\])/g, '');
+str3 = '[' + str3 + ']';
+let array3 = JSON.parse(str3);
+console.log(array3) // [ 1, 2, 3, 4, 5, 6 ]
 
 // 四: 普通递归
 let result = [];
-let fn = ary => {
+const fn = ary => {
   for (let i = 0; i < ary.length; i++) {
     const item = ary[i];
     if (Array.isArray(item)) {
@@ -76,7 +82,139 @@ let fn = ary => {
     }
   }
 }
+fn([1, [2, 3, [4,5 ]], 6])
+console.log(result)
 
+/**
+ * 6: 能不能模拟实现new的功能
+ * 分析: new的实例对象能访问原型的属性,也能访问构造函数的属性
+ */
+
+ //new的模拟实现
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+
+  // this.hibit = 'Games';
+  return null
+}
+Person.prototype.strenth = 60;
+Person.prototype.sayYouName = function() {
+  console.log('I am ' + this.name);
+};
+
+// const people = new Person('Jack', 20);
+const people = ObjFactory(Person, 'Jack', 20);
+console.log(people.name)
+console.log(people.age)
+console.log(people.strenth)
+people.sayYouName()
+
+
+function ObjFactory() {
+  // 从Object.prototype上克隆一个对象
+  const obj = new Object();
+
+  // 取得外部传入的构造器
+  const Constructor = [].shift.call(arguments);
+
+  // 指向正确的原型,将对象的原型指向构造函数的原型
+  obj.__proto__ = Constructor.prototype;
+
+  // 借用外部传入的构造器给obj设置属性
+  const ret = Constructor.apply(obj, arguments);
+
+  // 确保构造器总是返回一个对象
+  return typeof ret === 'object' ? ret || obj: obj;
+}
+
+/**
+ * 7: 能不能模拟实现bind功能
+ */
+var value = 2;
+
+var foo = {
+    value: 1
+};
+
+function bar(name, age) {
+    this.habit = 'shopping';
+    console.log(this.value);
+    console.log(name);
+    console.log(age);
+}
+
+bar.prototype.friend = 'kevin';
+
+var bindFoo = bar.bind(foo, 'daisy');
+
+var obj = new bindFoo('18');
+console.log(obj.__proto__, bindFoo.__proto__, bar.prototype)
+// undefined
+// daisy
+// 18
+console.log(obj.habit);
+console.log(obj.friend);
+// shopping
+// kevin
+
+
+/**
+ * 8: 能不能实现call/apply函数
+ */
+/**
+ * 注意两点:
+ * a: call改变this指向,指到两foo
+ * b: bar函数执行了
+ */
+const foo = {
+  value: 1
+};
+function bar(name, age) {
+  console.log(this.value, name, age);
+  return {
+    name,
+    age,
+    value: this.value
+  };
+}
+bar.call(foo, 'jrg', '18');
+
+Function.prototype.newCall = function(context) {
+  // 首先要获取调用call的函数,用this可以获取
+  context = context || window
+  context.fn = this;
+  let args = [];
+  for (let i = 1; i < arguments.length; i++) {
+    args.push(`arguments[${i}]`)
+  }
+  const result = eval(`context.fn(${args})`)
+  // eval(`context.fn(${args})`)
+  // context.fn()
+  console.log(result)
+  delete context.fn;
+
+  return result;
+}
+bar.newCall(foo, 'Jeck', 20);
+
+Function.prototype.newApply = function(context, arr) {
+  context = Object(context) || window;
+  context.fn = this;
+
+  let result;
+  if (!arr) {
+    result = context.fn();
+  } else {
+    let args = [];
+    for (let i = 1; i < arr.length; i++) {
+      args.push(`arr[${i}]`)
+    }
+    result = eval(`context.fn(${arts})`)
+  }
+  delete context.fn;
+  return result;
+}
 /**
  * 9: 谈谈你对js中this对理解
  * 一: 定义:当前执行代码的环境对象
