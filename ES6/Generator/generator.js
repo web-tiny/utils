@@ -1,8 +1,8 @@
 /*
  * @Author: Tiny 
  * @Date: 2019-02-25 14:10:56 
- * @Last Modified by: tiny.jiao
- * @Last Modified time: 2019-02-25 22:20:42
+ * @Last Modified by: tiny.jiao@aliyun.com
+ * @Last Modified time: yyyy-10-Th 10:09:43
  */
 
  /** 
@@ -29,13 +29,18 @@
   * 10: 作为对象属性的Generator函数
   * 11: Generator 函数的this 
  */
+function test333 () {
+  console.log(22);
+  return Promise.resolve("ok");
+};
 function* helloworldGenerator() {
-  yield 'hello'
-  yield 'world'
-  return 'ending'
+  yield test333();
+  yield 'hello';
+  yield 'world';
+  return 'ending';
 }
 const hw = helloworldGenerator()
-console.log(hw) // Object [Generator] {}
+// console.log(hw) // Object [Generator] {}
 console.log(hw.next()) // { value: 'hello', done: false }
 console.log(hw.next()) // { value: 'world', done: false }
 console.log(hw.next()) // { value: 'ending', done: false }

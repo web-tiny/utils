@@ -2,7 +2,7 @@
  * @Author: Tiny 
  * @Date: 2020-01-03 18:01:05 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2020-01-07 18:28:43
+ * @Last Modified time: yyyy-10-Th 10:47:58
  */
 
 /**
@@ -39,7 +39,7 @@ BigInt
 console.log(typeof 1n) // bigint
 console.log((1n).toLocaleString()) // 1
 
-// 应用数据类型
+// 引用数据类型
 Object // 普通对象-Object,数组对象-Array,正则对象-RegExp,日期对象-Date,数学函数-Math
 Function
 
@@ -82,9 +82,9 @@ const myInstanceof = (left, right) => {
   }
 }
 console.log('------------------------------')
-console.log(myInstanceof(simpleStr, String))
-console.log(myInstanceof(myNonObj, Object))
-console.log(myInstanceof(myDate, String))
+console.log(myInstanceof(function () {}, Object));
+console.log(myInstanceof({}, Object));
+console.log(myInstanceof([], Array));
 
 /**
  * 9: Object.is和===的区别？
@@ -98,7 +98,7 @@ console.log(Object.is(+0, -0), Object.is(NaN, NaN)) // false  true
 
 /**
  * 10: [] == ![]结果是什么？为什么？
- * ![] => !true => false => 0, 
+ * ![] => !true => false => 0, js中值的隐形转换
  */
 console.log([] == ![]) // true
 
@@ -119,10 +119,10 @@ console.log([] == ![]) // true
 // eg:
 const obj = {
   value: 3,
-  [Symbol.toPrimitive]() {
+  [Symbol.toPrimitive]() { // 5 46
     return 4
   },
-  valueOf(){
+  valueOf(){ // 6 56
     return 5
   },
   toString(){
@@ -141,8 +141,8 @@ const a = {
     this.value++;
     return this.value
   }
-}
-console.log(a == 1 && a == 2)
+};
+console.log(a == 1 && a == 2);
 
 /**
  * 15: 谈谈你对闭包的理解以及表现形式?
@@ -160,7 +160,7 @@ console.log(a == 1 && a == 2)
 // 经典灵魂叩问
 for(var i = 1; i <= 5; i ++){
   setTimeout(function timer(){
-    console.log(i)
+    console.log(i);
   }, 0)
 }
 

@@ -48,12 +48,12 @@ const notPerson = Person.call(this, 'san zhang') // 报错
 // Class内部调用new.target，返回当前的Class
 class Reactangle {
   constructor(length, width) {
-    console.log(new.target === Reactangle) // true
     this.length = length
     this.width = width
+    console.log(new.target === Reactangle, this.length, this.width); // true
   }
 }
-const obj = new Reactangle(4, 3)
+const obj = new Reactangle(4, 3);
 
 // 子类继承父类时，new.target会返回子类
 class Father {

@@ -2,7 +2,7 @@
  * @Author: Tiny 
  * @Date: 2019-02-22 10:22:31 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-02-22 14:07:36
+ * @Last Modified time: yyyy-10-Su 05:47:58
  */
 
  /** 
@@ -15,7 +15,7 @@
   *   3：让Object操作都变成函数行为
   *     如：name in obj 用 Reflect.has(obj, name)替代
   *     delete obj[name] 用 Reflect.deleteProperty(obj, name)替代
-  *   4：Reflect对象的方法与Proxy对象的方法一一对应，只要时Proxy对象的方法就能在Reflect对象上找打对应的方法
+  *   4：Reflect对象的方法与Proxy对象的方法一一对应，只要是Proxy对象的方法就能在Reflect对象上找到对应的方法
   * 3: Reflect对象总共的13个静态方法
   *   1: Reflect.apply(target, thisArg, args)
   *   2: Reflect.construct(target, args)
@@ -100,7 +100,8 @@ function Greeting(name) {
 // new 的写法
 const instance = new Greeting('tiny')
 // Reflect.construct 的写法
-const instance2 = Reflect.construct(Greeting, ['tiny'])
+const instance2 = Reflect.construct(Greeting, ['tiny']);
+console.log(instance2.name);
 
 /** 
  * Reflect.getPrototypeOf(obj): 用于读取对象的__proto__属性，
@@ -113,6 +114,7 @@ console.log(Reflect.getPrototypeOf(myObject3) === Greeting.prototype) // true
 const myObject4 = {}
 Object.setPrototypeOf(myObject4, Array.prototype)
 Reflect.setPrototypeOf(myObject4, Array.prototype)
+console.log(myObject4.prototype);
 
 /** 
  * Reflect.ownKeys(target):

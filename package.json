@@ -21,5 +21,8 @@
   "homepage": "https://github.com/web-tiny/utils#readme",
   "devDependencies": {
     "lodash": "^4.17.15"
+  },
+  "dependencies": {
+    "immutable": "^4.0.0-rc.12"
   }
 }

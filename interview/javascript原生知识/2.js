@@ -2,7 +2,7 @@
  * @Author: Tiny 
  * @Date: 2020-01-03 17:10:03 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2020-01-17 17:36:10
+ * @Last Modified time: yyyy-10-Sa 11:55:11
  */
 
 /**
@@ -49,7 +49,10 @@
  * 三: array.find()
  * 四: array.findIndex()
  */
-
+[1,2].indexOf(4); // -1, 有就返回值的下表,没有就返回-1
+[1,2].includes(3); // false, 返回一个布尔值
+[1,2,4,3].find( v => v % 2 === 0); // 2 满足回调方法的第一个值, 没有则返回undefined
+[1,2,3].findIndex(v => v > 1); // 1, 满足回调函数要求的第一个值的下表,没有则返回-1
 /**
  * 4: JS中flat---数组扁平化?
  */
@@ -186,22 +189,16 @@ Function.prototype.newCall = function(context) {
   context.fn = this;
   let args = [];
   for (let i = 1; i < arguments.length; i++) {
-    args.push(`arguments[${i}]`)
+    args.push(`arguments[${i}]`);
   }
-  const result = eval(`context.fn(${args})`)
-  // eval(`context.fn(${args})`)
-  // context.fn()
-  console.log(result)
+  const result = eval(`context.fn(${args})`);
   delete context.fn;
-
   return result;
 }
 bar.newCall(foo, 'Jeck', 20);
-
 Function.prototype.newApply = function(context, arr) {
   context = Object(context) || window;
   context.fn = this;
-
   let result;
   if (!arr) {
     result = context.fn();
@@ -210,11 +207,21 @@ Function.prototype.newApply = function(context, arr) {
     for (let i = 1; i < arr.length; i++) {
       args.push(`arr[${i}]`)
     }
-    result = eval(`context.fn(${arts})`)
+    result = eval(`context.fn(${args})`)
   }
   delete context.fn;
   return result;
 }
+function bar(name, age) {
+  console.log(this.value, name, age);
+  return {
+    name,
+    age,
+    value: this.value
+  };
+}
+const arr = [3,4,5]
+console.log("Apply:",bar.newApply(foo, arr));
 /**
  * 9: 谈谈你对js中this对理解
  * 一: 定义:当前执行代码的环境对象
@@ -310,6 +317,140 @@ const deepClone = (target, map = new WeakMap()) => {
   }
 }
 
-const a = {val:2};
+const a = {val:2, key: { key: 3, key2: 4 },};
 a.target = a;
 console.log(deepClone(a))
+
+/**
+ * bind的实现:
+ * 1: 返回一个函数
+ * 2: 可以传入参数
+ */
+
+ // 1: 返回一个函数
+Function.prototype.newBind1 = function (ctx) {
+  const self = this;
+  return function() {
+    return self.apply(ctx);
+  }
+}
+const foo = {
+  value: 1
+}
+function bar() {
+  return this.value;
+}
+const bindFoo = bar.newBind1(foo);
+console.log(bindFoo())
+
+// 可以传入参数
+Function.prototype.newBind2 = function (ctx) {
+  const self = this;
+  // 获取newBind2函数从第二个参数到最后一个参数
+  const args = Array.prototype.slice.call(arguments, 1)
+  return function () {
+    // newBind2 返回的函数传入的参数
+    const bindArgs = Array.prototype.slice.call(arguments);
+    return self.apply(ctx, args.concat(bindArgs));
+  }
+}
+const foo = {
+  value: 1
+}
+function bar(name, age) {
+  this.habit = 'shopping';
+  console.log(this.value);
+  console.log(name);
+  console.log(age);
+}
+const bindFoo = bar.newBind2(foo, "jrg");
+console.log(bindFoo(4))
+
+Function.prototype.newBind = function (ctx) {
+  if (typeof this !== "function") {
+    throw new Error("Function.prototype.bind - what is trying to be bound is not callable");
+  }
+  const self = this;
+  // 获取newBind函数从第二个参数到最后一个参数
+  const args = Array.prototype.slice.call(arguments, 1)
+  const fNOP = function () {};
+  const fBound = function () {
+    // newBind 返回的函数传入的参数
+    const bindArgs = Array.prototype.slice.call(arguments);
+    return self.apply(this instanceof fNOP ? this : ctx, args.concat(bindArgs));
+  };
+  fNOP.prototype = this.prototype;
+  fBound.prototype = new fNOP();
+  return fBound;
+}
+var value = 2;
+var foo = {
+  value: 1
+};
+function bar(name, age) {
+  this.habit = 'shopping';
+  console.log(this.value);
+  console.log(name);
+  console.log(age);
+}
+bar.prototype.friend = 'kevin';
+var bindFoo = bar.newBind(foo, 'daisy');
+var obj = new bindFoo('18');
+// undefined
+// daisy
+// 18
+console.log(obj.habit);
+console.log(obj.friend);
+
+/**
+ * 模拟实现new,
+ * new 是一个关键字,所以用一个工厂函数代替
+ */
+function objectFactory() {
+  // new 返回一个对象
+  const obj = new Object();
+  // 取一个参数为构造函数
+  Constructor = [].shift.call(arguments);
+  // 让返回对象的原型指向构造函数的原型
+  obj.__proto__ = Constructor.prototype;
+  // 使用apply改变构造函数的指向
+  const ret = Constructor.apply(obj, arguments);
+  // 如果构造函数的返回值是一个对象,则直接返回, 否则返回对象
+  return typeof ret === "object" ? ret : obj;
+}
+function Otaku (name, age) {
+  this.name = name;
+  this.age = age;
+  this.habit = 'Games';
+  return {
+    name: this.name,
+    age: this.age,
+    habit: this.habit
+  }
+}
+Otaku.prototype.strength = 60;
+// Otaku.prototype.sayYourName = function () {
+//   console.log('I am ' + this.name);
+// }
+var person = objectFactory(Otaku, 'Kevin', '18')
+console.log(person.name) // Kevin
+console.log(person.habit) // Games
+console.log(person.strength) // 60
+// person.sayYourName(); 
+
+function sortArr (arr) {
+  if (!(Array.isArray(arr))) {
+    throw new Error("need a array!")
+  }
+  for (let i = 0; i < arr.length - 1; i++) {
+    for (let j = 0; j < arr.length - i -1; j++) {
+      if (arr[j] > arr[j + 1]) {
+        let temp = arr[j];
+        arr[j] = arr[j + 1];
+        arr[j + 1] = temp;
+      };
+    }
+  }
+  return arr;
+}
+console.log(sortArr([3,4,1,2, 10,90,9]))

@@ -21,12 +21,14 @@
  */
 // 下面是模拟next方法返回值的例子
 function makeIterator(arr) {
-  let nextIndex = 0
+  let nextIndex = 0;
   return {
     next: function() {
-      return nextIndex < arr.length ? { value: arr[nextIndex++], done: false } : { value: undefined, done: true }
+      return nextIndex < arr.length 
+              ? { value: arr[nextIndex++], done: false } 
+              : { value: undefined, done: true };
     }
-  }
+  };
 }
 const it = makeIterator(['a', 'b'])
 console.log(it.next()) // { value: 'a', done: false }

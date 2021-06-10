@@ -32,34 +32,35 @@ class ColorPoint extends Point {
   }
 }
 
-// ColorPoint的构造方法没有调用super方法，固新建实列时报错
-class Point {
+// ColorPoint的构造方法没有调用super方法，故新建实列时报错
+class Point2 {
 }
-class ColorPoint extends Point {
+class ColorPoint2 extends Point2 {
   constructor() {
   }
 }
-const cp = new ColorPoint() // ReferenceError
+// Must call super constructor in derived class before accessing 'this' or returning from derived constructor
+const cp = new ColorPoint2() // ReferenceError
 
 // 子类的构造方法，如果没有显示定义，会被默认添加
-class ColorPoint extends Point {
+class ColorPoint3 extends Point {
 
 }
 // 等同于
-class ColorPoint extends Point {
+class ColorPoint4 extends Point {
   constructor(...args) {
     super(...args)
   }
 }
 
 // 在子类构造函数中，只有调用super之后才可以使用this关键字，否则会报错
-class Point {
+class Point5 {
   constructor(x, y) {
     this.x = x
     this.y = y
   }
 }
-class ColorPoint extends Point {
+class ColorPoint5 extends Point {
   constructor(x, y, color) {
 
     // 在super调用之前使用this，所以报错

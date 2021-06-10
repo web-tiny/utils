@@ -2,7 +2,7 @@
  * @Author: Tiny 
  * @Date: 2019-02-19 14:13:16 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-02-19 17:29:01
+ * @Last Modified time: yyyy-10-Mo 01:16:44
  */
 
  /** 
@@ -48,6 +48,7 @@ function map() {
 
   // Map转为对象
   function mapToObj(strMap) {
+    // 这种方法创建的对象没有原型
     let obj = Object.create(null)
 
     for (let [k, v] of strMap) {

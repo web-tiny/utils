@@ -30,14 +30,136 @@
       }
     })
     const el = dom.div({id: 'body', class: 'body'},
-      'hello, my name is ',
-      dom.ul({class: 'nameList'},
-        dom.li({class: 'item'}, 'the web'),
-        dom.li({class: 'item'}, 'food'),
-        dom.li({class: 'item'}, '...actualy that\'s it'),
-      )
+        'hello, my name is ',
+        dom.ul({class: 'nameList'},
+          dom.li({class: 'item'}, 'the web'),
+          dom.li({class: 'item'}, 'food'),
+          dom.li({class: 'item'}, '...actualy that\'s it'),
+          
+        ),
+        dom.div({class: 'artical'},
+          dom.div({class: 'left'}, 'article left'),
+          dom.div({class: 'right'}, 'article right'),
+          dom.button({class: 'proxy', onclick: "handleClick"}, 'proxy test')
+        )
     )
-    document.body.appendChild(el)
+    document.body.appendChild(el);
+    
+    function observerProxy(obj) {
+      const handler = {
+        get(target, key, receiver) {
+          if (typeof target[key] === "object" && target[key] !== null) {
+            return new Proxy(target[key], handler)
+          }
+          return Reflect.get(target, key, receiver);
+        },
+        set(target, key, value, receiver) {
+          console.log(key + " data is changed !")
+          return Reflect.set(target, key, value, receiver);
+        }
+      };
+      return new Proxy(obj, handler);
+    }
+    const obj = {
+      name: 'hould on',
+      flag: {
+        book: ["javascript 高程第四版本", "js精髓"],
+        user: {
+          name: 'tiny',
+          age:  18,
+          height: 180,
+          weight: 70
+        }
+      }
+    }
+    const objTest = observerProxy(obj);
+    
+
+    /**
+     * Object.defineProperty()缺点:
+     * 1: 新加的属性不能监听
+     * 2: 数组变化不能监听
+     * 3: 需要使用递归便利每一个key
+     * 4: 直接修改原始数据
+     * 5: 代理的是属性
+     */
+    function observer(obj) {
+      if (typeof obj === "object" && obj !== null) {
+        for (const key in obj) {
+          if (obj.hasOwnProperty(key)) {
+            const value = obj[key];
+            defineReactive(obj, key, value)
+          }
+        }
+      }
+    }
+    function defineReactive(obj, key, value) {
+      observer(value);
+      Object.defineProperty(obj, key, {
+        get() {
+          return value;
+        },
+        set(val) {
+          observer(val);
+          console.log(key + " data is changed !");
+          value = val;
+        }
+      })
+    }
+    const objDefin = observer(obj);
+    
+    /**
+     * Proxy:
+     * 1: 代理的是对象
+     * 2: 可以拦截到数组的变化
+     * 3: 拦截的方法多大13中
+     * 4: 返回一个拦截后的数组
+     *
+     */
+    // proxy 使用场景
+    // 1: 数组负数索引
+    const arrayProxy = {
+      get(target, key, receiver) {
+        const _index = key < 0 ? target.length + Number(key) : key;
+        return Reflect.get(target, _index, receiver);
+      }
+    };
+    const arrV = [1, 2, 3, 4, 5];
+    const arr = new Proxy(arrV, arrayProxy)
+    arr[-4] // 2
+
+    // 2: 表单校验
+    const formValidator = {
+      set(target, key, value, receiver) {
+        if (key === "age") {
+          if (value < 0 || !Number.isInteger(value)) {
+            throw new TypeError("please input valide value!")
+          }
+        }
+        return Reflect.set(target, key, value, receiver);
+      }
+    };
+    const objV = {
+      age: 16
+    };
+    const obj2 = new Proxy(objV, formValidator)
+
+    function validator () {
+
+    }
+    // 3. 数据格式化
+    const formatData = {
+      set(target, key, value, receiver) {
+        if (key === "date") {
+          Reflect.set(target, "timeStamp", +new Date(value), receiver)
+        }
+        return Reflect.set(target, key, value, receiver);
+      }
+    }
+    const timeObj = { date: "" }
+    const formatProxy = new Proxy(timeObj, formatData);
+    formatProxy.date = "2020-11-23";
+    console.log(formatProxy)
   </script>
 </body>
 </html>

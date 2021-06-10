@@ -2,7 +2,7 @@
  * @Author: Tiny 
  * @Date: 2019-03-01 10:05:41 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-03-01 18:01:32
+ * @Last Modified time: yyyy-10-Mo 04:40:54
  */
 
  /** 
@@ -135,8 +135,12 @@ console.log(typesOf(null, [], NaN, undefined, new Map())) // [ 'object', 'object
  *  
  */
 console.log(Array()) // []
+// 一个参数时是指数组长度
 console.log(Array(3)) // [ <3 empty items> ]
+// 不少于两个参数时才会返回所有参数组成的新数组
 console.log(Array(3, 11, 8)) // [ 3, 11, 8 ]
+
+// Array.of()解决了Array()行为不统一
 console.log(Array.of()) // []
 console.log(Array.of(3)) // [ 3 ]
 console.log(Array.of(3, 11, 8)) // [ 3, 11, 8 ]

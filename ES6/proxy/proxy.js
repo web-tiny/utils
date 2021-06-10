@@ -2,7 +2,7 @@
  * @Author: Tiny 
  * @Date: 2019-02-20 15:51:54 
  * @Last Modified by: tiny.jiao@aliyun.com
- * @Last Modified time: 2019-02-21 18:37:51
+ * @Last Modified time: yyyy-10-Su 05:40:11
  */
 
  /** 
@@ -44,6 +44,7 @@ let proxy = new Proxy(person, {
   }
 })
 console.log(proxy.name) // 张三
+person.age = 23
 console.log(proxy.age) // ReferenceError: Property "age" does not exist.
 
 /** 
@@ -66,7 +67,8 @@ function createArray(...e) {
   return new Proxy(target, handler)
 }
 let arr = createArray('a', 'b', 'c')
-console.log(arr[-2]) // b
+console.log(arr[1]) // b
+console.log(arr[-1]) // a
 
 // 下面是利用get拦截实现一个生成各种DOM节点的通用函数dom
 const dom = new Proxy({}, {
